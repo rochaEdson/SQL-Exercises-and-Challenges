@@ -1,0 +1,458 @@
+CREATE TABLE funcionarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50),
+    cargo VARCHAR(50),
+    salario DECIMAL(10,2),
+    departamento_id INT
+);
+
+INSERT INTO funcionarios (nome, cargo, salario, departamento_id) VALUES
+('Ana', 'Analista', 3500, 1),
+('Bruno', 'Gerente', 7000, 2),
+('Carlos', 'Desenvolvedor', 4200, 1),
+('Diego', 'Diretor', 10000, 3),
+('Elisa', 'Analista', 3200, 1),
+('Fernanda', 'Gerente', 7500, 2),
+('Gabriel', 'Desenvolvedor', 4800, 1),
+('Hugo', 'Analista', 3600, 3)
+('null', 'Analista', 3600, 3);
+
+CREATE TABLE departamentos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50),
+    localizacao VARCHAR(50)
+);
+
+INSERT INTO departamentos (nome, localizacao) VALUES
+('TI', 'São Paulo'),
+('RH', 'Rio de Janeiro'),
+('Financeiro', 'São Paulo');
+--------------------------------------------------------------------------
+
+
+--Exercícios:
+
+--Básico: Liste todos os funcionários (nome, cargo, salário) do departamento de TI.
+
+SELECT 
+nome,
+cargo,
+salario
+FROM funcionarios
+WHERE departamento_id = '1' --(SELECT id FROM departamentos WHERE nome = 'TI');
+
+
+--Básico: Liste o nome e o salário dos funcionários que ganham mais de R$ 4.000.
+
+SELECT nome, salario
+FROM funcionarios
+WHERE salario > '4000'
+
+--Básico: Liste todos os departamentos e suas localizações.
+
+-- primeiro modo
+SELECT nome, localizacao
+FROM departamentos
+
+
+-- segundo modo
+SELECT * FROM departamentos
+
+--Básico: Liste os funcionários que são Analistas ou Desenvolvedores.
+
+SELECT nome
+FROM funcionarios
+WHERE cargo = 'Analista' OR cargo = 'Desenvolvedor'
+
+--Intermediário: Liste o nome dos funcionários e o nome do departamento em que trabalham.
+
+SELECT f.nome, d.nome AS departamento
+FROM funcionarios f
+JOIN departamentos d ON f.departamento_id = d.id
+
+--Intermediário: Liste o nome dos funcionários, seus cargos e o nome do departamento, ordenados por salário em ordem decrescente.
+
+SELECT f.nome, f.cargo, f.salario, d.nome AS departamento
+FROM funcionarios f
+JOIN departamentos d ON f.departamento_id = d.id
+ORDER BY f.salario DESC
+
+--Intermediário: Encontre o salário médio dos funcionários do departamento de RH.
+
+SELECT AVG(f.salario) AS salario_medio
+FROM funcionarios f
+INNER JOIN departamentos d ON f.departamento_id = d.id
+WHERE d.nome = 'RH';
+
+
+--Intermediário: Liste os departamentos que têm funcionários com salário superior a R$ 5.000.
+
+SELECT DISTINCT d.nome
+FROM departamentos d
+INNER JOIN funcionarios f ON d.id = f.departamento_id
+WHERE f.salario > 5000;
+
+
+--Intermediário: Conte quantos funcionários há em cada departamento. <<<< TREINAR MAIS !!!! 
+
+SELECT d.nome, COUNT(f.departamento_id) AS quantidade
+FROM funcionarios f
+LEFT JOIN departamentos d ON f.departamento_id = d.id
+GROUP BY f.departamento_id, d.nome
+
+--Intermediário: Liste os funcionários que trabalham em São Paulo.
+
+SELECT f.nome, d.localizacao 
+FROM funcionarios f
+JOIN departamentos d
+ON d.localizacao = 'São Paulo'
+----------------------------------------------------------------------------
+--TREINANDO COM WHERE
+
+SELECT nome
+FROM funcionarios
+WHERE nome <> 'Ana';
+
+SELECT nome, salario
+FROM funcionarios
+WHERE salario BETWEEN 3000 AND 5000
+
+
+select nome
+from funcionarios
+where nome like 'A%';
+
+select nome 
+from funcionarios
+where nome like '____'; 
+
+select nome, cargo
+from funcionarios
+where cargo in ('Analista', 'Desenvolvedor');
+ 
+
+select nome, cargo, salario
+from funcionarios
+where cargo = 'Analista' and salario > 2000;
+
+select nome, cargo, salario
+from funcionarios
+where nome is null;
+
+
+select nome, salario
+from funcionarios
+where salario > (select avg(salario) from funcionarios);
+
+
+select nome, cargo, salario
+from funcionarios
+order by salario desc
+
+
+select nome, cargo, salario
+from funcionarios
+order by nome asc, salario desc
+
+
+
+select nome, salario, salario * 1.5 as aumento
+from funcionarios
+order by aumento desc
+
+
+
+select distinct nome, cargo
+from funcionarios
+
+select nome, count(*) as total
+from funcionarios
+group by nome 
+
+select count(distinct cargo) as cargos
+from funcionarios
+
+
+
+select nome
+from funcionarios
+where cargo in (
+select distinct cargo
+from funcionarios
+where cargo <> 'Gerente'
+);
+
+
+select nome 
+from funcionarios limit 3
+
+
+select sum(f.salario) as total_salario
+from funcionarios f
+
+select cargo, sum(salario) as total_salario
+from funcionarios
+group by cargo
+order by total_salario desc
+
+
+select cargo, avg(salario) as media_salarial
+from funcionarios
+group by cargo
+
+select cargo, avg(salario) as media_salario
+from funcionarios
+group by cargo
+having avg(salario) > 5000;
+
+
+select min(salario) as menor
+from funcionarios
+
+
+select
+	cargo,
+	count(*) as total_funcionarios,
+	sum(salario) as total_salario,
+	avg(salario) as media_salarial,
+	min(salario) as salarioMinimo,
+	max(salario) as salarioMaximo
+from funcionarios
+group by cargo;
+
+
+
+select upper('cargo') as resultado;
+
+select upper(nome), upper(cargo)
+from funcionarios
+where id = '1'
+
+
+select lower(nome), lower(cargo)
+from funcionarios
+where id = '1'
+
+
+select concat(nome, ' ', cargo) as NomeCargo
+from funcionarios
+
+
+
+select substring('Analista' from 0 for 4) as resultado;
+
+
+select trim('              Ana Analista ') as resultado; -- TRIM remove os espaços de ambos os lados
+
+select ltrim('              Ana Analista ') as resultado; -- LTRIM remove os espaços
+
+select rtrim('    Ana Analista                 ') as resultado; -- RTRIM remove os espaços
+
+
+select now() as dataHora_atual
+
+select current_timestamp
+
+
+select '2025-02-19'::date + interval '1 day' as nova_data;
+
+select now() + interval '10 days' ----DATEADD()
+
+select now() - '1986-06-13' ---------DATEDIFF()
+
+
+select extract(year from now()) as ano, 
+
+	   extract(month from now()) as mes,
+
+ 	   extract(day from now()) as ano;
+
+
+select cargo, sum(salario) as total_salario
+from funcionarios 
+group by cargo 
+order by total_salario desc
+
+
+select cargo, avg(salario) as mediaSalarial
+from funcionarios
+group by cargo
+order by mediaSalarial desc
+
+
+select cargo, min(salario)
+from funcionarios
+group by cargo
+
+
+select d.nome, count(f.nome) as total
+from departamentos d
+left join funcionarios f on f.departamento_id = d.id
+group by d.nome
+having count(f.nome) < 3;
+
+select cargo, avg(salario) as mediaSalarial
+from funcionarios
+group by cargo
+having avg(salario) < 5000
+
+
+-- Criação de tabelas mais elaboradas para treino de JOINs
+
+-- Tabela de Departamentos
+CREATE TABLE departamentos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    localizacao VARCHAR(50)
+);
+
+-- Tabela de Funcionários
+CREATE TABLE funcionarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    salario NUMERIC(10, 2),
+    departamento_id INT,
+    gerente_id INT,
+    FOREIGN KEY (departamento_id) REFERENCES departamentos(id),
+    FOREIGN KEY (gerente_id) REFERENCES funcionarios(id)
+);
+
+-- Tabela de Projetos
+CREATE TABLE projetos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    departamento_id INT,
+    FOREIGN KEY (departamento_id) REFERENCES departamentos(id)
+);
+
+-- Tabela de Funcionários em Projetos (Relacionamento N:N)
+CREATE TABLE funcionario_projeto (
+    funcionario_id INT,
+    projeto_id INT,
+    PRIMARY KEY (funcionario_id, projeto_id),
+    FOREIGN KEY (funcionario_id) REFERENCES funcionarios(id),
+    FOREIGN KEY (projeto_id) REFERENCES projetos(id)
+);
+
+-- Inserção de dados em Departamentos
+INSERT INTO departamentos (nome, localizacao) VALUES
+('TI', 'São Paulo'),
+('Recursos Humanos', 'Rio de Janeiro'),
+('Financeiro', 'Belo Horizonte'),
+('Marketing', 'São Paulo');
+
+-- Inserção de dados em Funcionários
+INSERT INTO funcionarios (nome, salario, departamento_id, gerente_id) VALUES
+('Alice', 7000.00, 1, NULL),
+('Bruno', 4500.00, 1, 1),
+('Carlos', 4000.00, 2, NULL),
+('Diana', 5000.00, 3, NULL),
+('Eduardo', NULL, NULL, NULL), -- Funcionário sem departamento
+('Fernanda', 6000.00, 4, NULL);
+
+-- Inserção de dados em Projetos
+INSERT INTO projetos (nome, departamento_id) VALUES
+('Sistema de Vendas', 1),
+('Recrutamento 2025', 2),
+('Auditoria Financeira', 3),
+('Campanha Publicitária', 4),
+('Projeto Independente', NULL); -- Projeto sem departamento
+
+-- Relacionamento entre Funcionários e Projetos
+INSERT INTO funcionario_projeto (funcionario_id, projeto_id) VALUES
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 3),
+(5, 4),
+(2, 4); -- Bruno também participa da campanha publicitária
+
+
+
+--INNER JOIN -- RETORNA APENAS OS DADOS IGUAIS EM AMBAS TABELAS
+
+--DEPARTAMENTOS: id, nome, localizacao
+--FUNCIONARIOS: id, nome, salario, FK: departamento_id, gerente_id
+--PROJETOS: id, nome, FK: departamento_id 
+--FUNCIONARIO_PROJETO: FK: funcionario_id, projeto_id
+
+SELECT f.nome AS funcionario, p.nome AS projeto
+FROM funcionarios f
+INNER JOIN funcionario_projeto fp ON f.id = fp.funcionario_id
+INNER JOIN projetos p ON fp.projeto_id = p.id;
+
+
+select f.nome as funcionario, p.nome as projeto
+from funcionarios f
+inner join funcionario_projeto fp on fp.projeto_id = f.id
+inner join projetos p on fp.projeto_id = p.id
+
+
+select f.nome as funcionario, p.nome as projeto
+from funcionarios f
+left join funcionario_projeto fp on f.id = fp.funcionario_id
+left join projetos p on fp.projeto_id = p.id
+
+
+select f.nome, p.nome
+from funcionarios f
+left join projetos p on f.id = p.id
+
+
+select f.nome as funcionario, p.nome as projeto
+from funcionarios f
+right join funcionario_projeto fp on f.id = fp.funcionario_id
+right join projetos p on fp.funcionario_id = p.id
+
+
+select f.nome as funcionario, p.nome as projeto
+from funcionarios f
+full outer join funcionario_projeto fp on f.id = fp.funcionario_id
+full outer join projetos p on fp.projeto_id = p.id
+
+
+select f1.nome as funcionario_1, f2.nome as funcionario_2, d.nome as departamento
+from funcionarios f1
+inner join funcionarios f2 on f1.departamento_id = f2.departamento_id
+inner join departamentos d on f1.departamento_id = d.id
+where f1.id <> f2.id
+
+
+select f.nome, d.nome as departamento
+from funcionarios f
+inner join departamentos d
+	on f.departamento_id = d.id
+	and d.nome = 'TI'
+
+
+select f.nome, d.nome as departamento
+from funcionarios f
+join departamentos d on f.departamento_id = d.id
+where d.nome = 'TI'
+
+
+select f.nome, p.nome as projeto
+from funcionarios f
+inner join projetos p
+	using(departamento_id)
+
+
+--DEPARTAMENTOS: id, nome, localizacao
+--FUNCIONARIOS: id, nome, salario, FK: departamento_id, gerente_id
+--PROJETOS: id, nome, FK: departamento_id 
+--FUNCIONARIO_PROJETO: FK: funcionario_id, projeto_id
+
+
+select localizacao from departamentos 
+union
+select nome from funcionarios
+
+select nome, 'Antigo' as origem from funcionarios
+union
+select nome, 'Novo' as origem from departamentos
+order by origem, nome;
+
+
+
+
+
