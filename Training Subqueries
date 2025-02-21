@@ -1,0 +1,192 @@
+CREATE TABLE funcionarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50),
+    cargo VARCHAR(50),
+    salario DECIMAL(10,2),
+    departamento_id INT
+);
+
+INSERT INTO funcionarios (nome, cargo, salario, departamento_id) VALUES
+('Ana', 'Analista', 3500, 1),
+('Bruno', 'Gerente', 7000, 2),
+('Carlos', 'Desenvolvedor', 4200, 1),
+('Diego', 'Diretor', 10000, 3),
+('Elisa', 'Analista', 3200, 1),
+('Fernanda', 'Gerente', 7500, 2),
+('Gabriel', 'Desenvolvedor', 4800, 1),
+('Hugo', 'Analista', 3600, 3);
+
+CREATE TABLE departamentos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50),
+    localizacao VARCHAR(50)
+);
+
+INSERT INTO departamentos (nome, localizacao) VALUES
+('TI', 'São Paulo'),
+('RH', 'Rio de Janeiro'),
+('Financeiro', 'São Paulo');
+
+
+SELECT nome, salario
+FROM funcionarios
+WHERE salario > (SELECT AVG(salario) FROM funcionarios);
+
+
+select nome, cargo, salario
+from funcionarios
+where salario = (select max(salario) from funcionarios)
+
+select nome, cargo, salario
+from funcionarios
+where salario = (select min(salario) from funcionarios)
+
+SELECT AVG(salario) AS media_salarial
+FROM funcionarios
+WHERE departamento_id = 1;
+
+
+select nome, cargo
+from funcionarios
+where departamento_id in (select id from departamentos where localizacao = 'São Paulo');
+
+
+select nome, cargo
+from funcionarios
+where departamento_id in(select id from departamentos where localizacao = 'São Paulo');
+
+
+select nome, salario
+from funcionarios
+where salario > (select avg(salario) from funcionarios)
+
+
+select nome, cargo, salario
+from funcionarios
+where salario = (select min(salario) from funcionarios) 
+
+
+
+SELECT nome
+FROM funcionarios
+WHERE departamento_id in (select id from departamentos where localizacao = 'São Paulo')
+
+
+SELECT nome
+FROM funcionarios
+WHERE departamento_id IN (SELECT id FROM departamentos WHERE localizacao = 'Rio de Janeiro')
+
+
+
+SELECT nome, salario, departamento_id
+FROM funcionarios f1
+WHERE salario > (SELECT AVG(salario) 
+				 FROM funcionarios f2
+				 WHERE f1.departamento_id = f2.departamento_id)
+
+SELECT nome, salario, departamento_id
+FROM funcionarios f1
+WHERE salario < (SELECT AVG(salario) 
+				 FROM funcionarios f2
+				 WHERE f1.departamento_id = f2.departamento_id)
+
+
+
+
+SELECT nome
+FROM departamentos d
+		 WHERE EXISTS 
+		(SELECT 1 
+		 FROM funcionarios f WHERE f.departamento_id = d.id)
+
+SELECT nome
+FROM departamentos d
+		 WHERE NOT EXISTS 
+		(SELECT 1 
+		 FROM funcionarios f WHERE f.departamento_id = d.id)
+
+
+SELECT 
+nome,
+cargo,
+salario,
+(SELECT nome FROM departamentos d WHERE f.departamento_id = d.id) AS departamento
+FROM funcionarios f
+
+
+SELECT nome, 
+       cargo, 
+       salario, 
+       (SELECT nome FROM departamentos WHERE id = funcionarios.departamento_id) AS departamento
+FROM funcionarios;
+ 
+
+
+SELECT
+f.nome,
+f.cargo,
+f.salario,
+d.nome AS departamento,
+d.localizacao
+FROM funcionarios f
+JOIN departamentos d ON f.departamento_id = d.id  
+
+
+UPDATE funcionarios
+SET salario = salario * 1.10
+WHERE salario < (SELECT AVG(salario) FROM funcionarios);
+
+
+UPDATE funcionarios f
+SET salario = salario * 1.1
+FROM departamentos d
+WHERE f.departamento_id = d.id
+AND d.nome = 'TI'
+
+DELETE FROM funcionarios
+WHERE departamento_id IN (
+	SELECT id FROM departamentos WHERE localizacao = 'Rio de Janeiro'
+)
+
+
+SELECT f.nome, 
+ 	   f.cargo,
+	   d.localizacao
+FROM funcionarios f
+JOIN departamentos d ON d.id = f.departamento_id
+
+
+
+INSERT INTO departamentos (nome, localizacao) VALUES
+
+('RH', 'Rio de Janeiro')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
