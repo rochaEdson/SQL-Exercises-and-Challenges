@@ -1,0 +1,1209 @@
+create table Autor (
+IdAutor smallint identity,
+NomeAutor varchar(50) not null,
+SobrenomeAutor varchar(60) not null,
+constraint pk_id_autor primary key(IdAutor)
+);
+select * from Autor
+
+create database Biblioteca
+
+use Biblioteca
+
+ALTER TABLE Autor
+ADD NomeAutor varchar(50) not null,
+    SobrenomeAutor varchar(60);
+
+
+sp_rename 'Autor.Sobrenome', 'SobrenomeAutor', 'column'; 
+
+sp_help Autor;
+
+/* 
+Principais Tipos de Dados no SQL Server
+
+1. char(n)    - String de caracteres de tamanho fixo n, máximo de 8000 caracteres.
+2. varchar(n) - String de caracteres de tamanho variável n, máximo de 8000 caracteres.
+3. tinyint    - Números inteiros de 0 a 255.
+4. smallint   - Números inteiros de -32.768 a 32.767.
+5. int        - Números inteiros entre -2.147.483.648 e 2.147.483.647.
+6. money      - Dados monetários de -922.337.203.685.477,5808 até 922.337.203.685.477,5807.
+7. real       - Números de ponto flutuante de precisão dupla entre -3,4 x 10^38 e 3,4 x 10^38.
+8. date       - Data apenas. De 01/01/0001 a 31/12/9999.
+9. time       - Hora apenas. Precisão de até 100 nanossegundos.
+*/
+
+create table Editora(
+IdEditora smallint primary key identity,
+NomeEditora varchar(50) not null
+);
+
+create table Assunto(
+IdAssunto tinyint primary key identity,
+NomeAssunto varchar(25) not null
+);
+
+Exec sp_rename 'Asunto', 'Assunto';
+
+create table Livro(
+IdLivro smallint not null primary key identity(100,1),
+NomeLivro varchar(70) not null,
+ISBN13 char(13) unique not null,
+DataPub date,
+PrecoLivro money not null,
+NumeroPaginas smallint not null,
+IdEditora smallint not null,
+IdAssunto tinyint not null,
+constraint fk_id_editora foreign key(IdEditora)
+	references Editora(IdEditora) on delete cascade,
+	constraint fk_id_assunto foreign key(IdAssunto)
+	references Assunto(IdAssunto) on delete cascade,
+	constraint verifica_preco check(PrecoLivro >=0)
+);
+
+
+create table LivroAutor (
+IdLivro smallint not null,
+IdAutor smallint not null,
+constraint fk_id_livros foreign key(IdLivro) references Livro(IdLivro),
+constraint fk_id_autores foreign key(IdAutor) references Autor(IdAutor),
+constraint pk_livro_autor primary key(IdLivro, IdAutor)
+);
+
+
+select name from Biblioteca.sys.tables;
+
+--Adicionar nova coluna a uma tabela existente.
+alter table Livro
+add Edição smallint;
+
+--Alterar o tipo de dados de uma coluna;
+alter table Livro 
+alter column Edição tinyint;
+
+
+--Adicionar chave primária
+alter table NomeTabela 
+add primary key (Coluna);
+
+--Excluir constraint de uma coluna
+alter table NomeTabela
+drop constraint NomeConstraint;
+
+--Verificar nomes das constraints
+sp_help Livro;
+
+
+--Excluir coluna de uma tabela
+alter table NomeTabela
+drop column
+
+--Excluir tabela
+drop table NomeTabela;
+
+--Renomear tabelas
+sp_rename 'NomeAtual', 'NovoNome';
+
+
+INSERT INTO Assunto (NomeAssunto)
+VALUES
+('Ficção Científica'),
+('Botânica'),
+('Eletrônica'),
+('Matemática'),
+('Aventura'),
+('Romance'),
+('Finanças'),
+('Gastronomia'),
+('Terror'),
+('Administração'),
+('Informática'),
+('Suspense');
+
+
+select * from Assunto
+
+
+INSERT INTO Editora (NomeEditora)
+VALUES
+('Prentice Hall'), ('O´Reilly'),
+('Aleph'), ('Microsoft Press'),
+('Wiley'), ('HarperCollins'),
+('Érica'), ('Novatec'),
+('McGraw-Hill'), ('Apress'),
+('Francisco Alves'), ('Sybex'),
+('Globo'), ('Companhia das Letras'),
+('Morro Branco'), ('Penguin Books'), ('Martin Claret'),
+('Record'), ('Springer'), ('Melhoramentos'),
+('Oxford'), ('Taschen'), ('Ediouro'), ('Bookman');
+
+select * from Editora
+
+INSERT INTO Autor (NomeAutor, SobrenomeAutor)
+VALUES
+('Umberto', 'Eco'),  
+('Daniel', 'Barret'), 
+('Gerald', 'Carter'), 
+('Mark', 'Sobell'),
+('William', 'Stanek'), ('Christine', 'Bresnahan'), ('William', 'Gibson'),
+('James', 'Joyce'), ('John', 'Emsley'), ('José', 'Saramago'),
+('Richard', 'Silverman'), ('Robert', 'Byrnes'), ('Jay', 'Ts'),
+('Robert', 'Eckstein'), ('Paul', 'Horowitz'), ('Winfield', 'Hill'),
+('Joel', 'Murach'), ('Paul', 'Scherz'), ('Simon', 'Monk'),
+('George', 'Orwell'), ('Ítalo', 'Calvino'), ('Machado', 'de Assis'),
+('Oliver', 'Sacks'), ('Ray', 'Bradbury'), ('Walter', 'Isaacson'),
+('Benjamin', 'Graham'), ('Júlio', 'Verne'), ('Marcelo', 'Gleiser'),
+('Harri', 'Lorenzi'), ('Humphrey', 'Carpenter'), ('Isaac', 'Asimov'),
+('Aldous', 'Huxley'), ('Arthur', 'Conan Doyle'), ('Blaise', 'Pascal'),
+('Jostein', 'Gaarder'), ('Stephen', 'Hawking'), ('Stephen', 'Jay Gould'),
+('Neil', 'De Grasse Tyson'), ('Charles', 'Darwin'), ('Alan', 'Turing'), ('Arthur', 'C. Clarke');
+
+
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdAssunto, IdEditora)
+VALUES ('A Arte da Eletrônica', '9788582604342', '2017-03-08', 300.74, 1160, 3, 24)
+
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Vinte Mil Léguas Submarinas', '9788582850022', '2014-09-16', 24.50, 448, 16, 1);
+
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('O Investidor Inteligente', '9788595080805', '2016-01-25', 79.90, 450, 6, 7);
+
+-- Livro 1
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('2001 - Uma Odisseia no Espaço', '9788576571551', '2020-09-30', 55.86, 336, 3, 1);
+
+-- Livro 2
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Fahrenheit 451', '9788525052247', '2012-06-01', 43.56, 216, 3, 1);
+
+-- Livro 3
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Admirável mundo novo', '9788525056009', '2014-01-01', 50.32, 312, 3, 1);
+
+-- Livro 4
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('1984', '9788535914849', '2009-07-21', 29.67, 416, 14, 1);
+
+-- Livro 5
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('A volta ao mundo em 80 dias', '9788537816134', '1873-01-01', 59.41, 256, 11, 5);
+
+-- Livro 6
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('O Nome da Rosa', '9788501115829', '2019-12-16', 51.99, 592, 18, 5);
+
+-- Livro 7
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Memórias Póstumas de Brás Cubas', '9788525433131', '1881-01-01', 34.90, 240, 14, 6);
+
+-- Livro 8
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('O Evangelho Segundo Jesus Cristo', '9788535905595', '1991-01-01', 49.90, 512, 14, 6);
+
+-- Livro 9
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Cidades Invisíveis', '9788535907445', '1972-01-01', 42.80, 176, 14, 6);
+
+-- Livro 10
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Windows Server 2016: Installing & Configuring', '9781535074094', '2016-07-12', 432.00, 436, 4, 11);
+
+-- Livro 11
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Ensaio Sobre a Cegueira', '9788571645118', '1995-01-01', 39.90, 312, 14, 6);
+
+-- Livro 12
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Ulisses', '9780141184432', '1922-02-02', 78.90, 450, 16, 6);
+
+-- Livro 13
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Practical Electronics for Inventors', '9781259587542', '2016-07-11', 212.58, 1056, 9, 3);
+
+-- Livro 14
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Eu, Robô', '9788576571667', '1950-12-02', 35.00, 300, 3, 1);
+
+-- Livro 15
+INSERT INTO Livro (NomeLivro, ISBN13, DataPub, PrecoLivro, NumeroPaginas, IdEditora, IdAssunto)
+VALUES ('Dom Casmurro', '9788525404186', '1900-01-01', 19.90, 256, 14, 6);
+
+
+
+select * from Livro
+
+DBCC CHECKIDENT ('Livro', RESEED, 99);
+
+DELETE FROM Livro;
+
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (100, 15);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (100, 16);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (101, 27);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (102, 26);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (103, 41);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (104, 24);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (105, 32); 
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (106, 20);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (107, 27);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (108, 1);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (109, 22);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (110, 10);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (111, 21);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (112, 5);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (113, 10);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (114, 8);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (115, 18);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (115, 19);
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (116, 31); 
+INSERT INTO LivroAutor (IdLivro, IdAutor) VALUES (117, 22);
+
+select * from LivroAutor
+
+
+select * 
+into LivrosFiccao
+from Livro
+where IdAssunto =1;
+
+
+select * from LivrosFiccao
+
+drop table LivrosFiccao
+
+
+select NomeLivro, PrecoLivro
+from Livro;
+
+
+select NomeLivro, ISBN13, PrecoLivro
+from Livro;
+
+
+select distinct IdEditora 
+from Livro;
+
+-- select into: Criar uma tabela com dados de outra existente
+
+select NomeLivro, ISBN13
+into LivroISBN
+from Livro;
+
+select * from LivroISBN
+
+
+select NomeLivro, PrecoLivro, DataPub 
+from Livro;
+
+select SobrenomeAutor 
+from Autor;
+
+select NomeAssunto
+from Assunto
+
+select NomeEditora, IdEditora 
+from Editora
+
+select distinct IdAssunto
+from Livro
+
+select * from Livro
+order by NomeLivro
+
+select NomeLivro, IdEditora
+from Livro
+order by IdEditora
+
+select NomeLivro, PrecoLivro
+from Livro
+order by PrecoLivro desc;
+
+
+
+select NomeLivro, PrecoLivro, IdEditora
+from Livro
+order by IdEditora, PrecoLivro asc;
+
+select top (2) NomeLivro
+from Livro
+order by NomeLivro
+
+
+select top (10) percent NomeLivro
+from Livro
+order by NomeLivro
+
+
+select top (3) NomeLivro
+from Livro
+order by NomeLivro desc
+
+
+select top (3) with ties NomeLivro, IdAssunto
+from Livro
+order by IdAssunto desc
+
+select NomeLivro, DataPub
+from Livro
+where IdEditora = 3
+
+
+select IdAutor, NomeAutor
+from Autor
+where SobrenomeAutor = 'Verne';
+
+
+select NomeLivro, PrecoLivro
+from Livro
+where PrecoLivro > 100.00
+
+
+select NomeLivro, DataPub
+from Livro
+where IdEditora = (
+select IdEditora 
+from Editora
+where NomeEditora = 'Aleph'
+)order by NomeLivro;
+
+
+--Apagar os dados de uma tabela
+
+truncate table nome_tabela;
+
+--Verificar o valor atual de identity
+select ident_current('Teste')
+
+
+--Atualizar Registros: Clausula update
+                                                                                               /*
+update tabela
+set coluna = novo_valor
+where coluna
+                                                                                           */
+select IdLivro, NomeLivro, PrecoLivro, NumeroPaginas from Livro;
+
+update Livro
+set NomeLivro = 'Eu, Robô'
+where IdLivro = 116;
+
+
+select IdLivro, PrecoLivro
+from Livro
+where IdLivro = 105
+
+
+update Livro
+set PrecoLivro = 60.00
+where IdLivro = 105;
+
+
+
+update Livro
+set PrecoLivro = 60.00 * 1.1
+where IdLivro = 105;
+
+
+
+update Livro
+set PrecoLivro = PrecoLivro * 0.8
+where IdLivro = 105 ;
+
+
+
+update Livro
+set PrecoLivro = 60.00, NumeroPaginas = 320
+where idLivro = 105;
+
+
+--Nomes Alternativos: AS (ALIAS)
+
+                                                                           /*
+
+Sintaxe:
+
+select coluna1 as nome_alternativo1
+from tabela as nome_alternativo_tabela
+                                                                            */
+
+select NomeLivro as Livro
+from Livro;
+
+select A.NomeAutor as Nome, A.SobrenomeAutor as Sobrenome
+from Autor as A;
+
+select top(3) NomeLivro as 'Livros mais Caros', PrecoLivro as 'Preço do Livro'
+from Livro as L
+order by 'Preço do Livro' desc;
+
+
+--Filtros Combinados: Operadores Lógivos and, or, not
+                                                                                                         /*
+AND
+OR
+NOT
+																																		*/
+
+
+select * from	Livro
+where IdLivro > 102 and IdEditora < 108;
+
+
+select * from Livro
+where IdLivro > 110 or IdEditora < 4;
+
+                                                                                                                       /*
+--BETWEEN -	Seleção de Intervalos 
+Sintaxe:
+
+select colunas
+from tabela
+where coluna between valor1 and valor2
+																																								*/
+
+
+
+select * from Livro
+where DataPub between '20040507' and '20140507';
+
+
+select NomeLivro Livro, PrecoLivro Preço
+from Livro
+where PrecoLivro between 50.00 and 100.00;
+
+
+select NomeLivro, DataPub, PrecoLivro
+from Livro
+where PrecoLivro >= 60.00
+and DataPub between '20050620' and '20100620'
+or DataPub between '20160101' and '20200101'
+order by DataPUb desc;
+
+/*Combinar consultas com operador UNION	
+
+Sintaxe: 
+
+select colunas from tabela1
+union
+select colunas from tabela2
+*/
+
+--Exemplo 01
+
+select NomeAutor Nome, 'Autor' as tipo from Autor
+union
+select NomeEditora Nome, 'Editora' as tipo from Editora;
+
+
+--Exemplo 02
+
+select NomeLivro as Nome, 'Livro' as Tipo from Livro
+union
+select NomeAssunto as Nome, 'Assunto' as Tipo from Assunto;
+
+select NomeAutor as Nome, 'Autor' as Tipo from Autor
+union
+select NomeEditora as Nome, 'Editora' as Tipo from Editora
+
+
+select NomeAssunto as Nome, 'Assunto' as Tipo from Assunto
+union
+select NomeLivro as Nome, 'Livro' as Tipo from Livro;
+
+
+--Exemplo 03
+select NomeAutor as Nome, 'Autor' as Tipo from Autor
+union
+select NomeEditora as Nome, 'Editora' as Tipo from Editora
+union 
+select NomeAssunto as Nome, 'Assunto' as Tipo from Assunto
+union
+select NomeLivro as Nome, 'Livro' as Tipo from Livro;
+
+--Funções de Agregação
+
+--MIN, MAX, AVG, SUM, COUNT
+
+select count(*) Total
+from Autor;
+
+select max(PrecoLivro) 'Mais Caro'
+from Livro
+
+select min(NumeroPaginas)
+from Livro
+
+
+select avg(PrecoLivro) 'Preço Médio'
+from Livro
+
+select sum(PrecoLivro) 'Valor Total'
+from Livro;
+
+select count(*) Total
+from Livro
+where IdAssunto =1;
+
+select sum(PrecoLivro) / count(*) as 'Preço Médio'
+from Livro
+
+
+select NomeLivro, PrecoLivro
+from Livro
+where PrecoLivro = (select max(PrecoLivro) from Livro)
+
+
+--Cláusula Like (e Not Like)
+
+--Sintaxe: 
+--select colunas
+--from tabela
+--where coluna like padrão;
+
+-- Metacaracteres:
+-- % qualquer cadeia de 0 ou mais caracteres
+-- _ qualquer caractere único
+-- [] caracteres únicos no intervalo ou conjunto especificado
+-- [^] caracteres únicos Não no intervalo ou conjunto especificado
+
+
+select * from Livro
+where NomeLivro like 'F%' -- Começam com F
+
+
+select NomeAutor
+from Autor
+where NomeAutor Not like 'S%' -- Começam com S
+
+
+select * from Livro
+where NomeLivro like '[FD]%' -- Começam com F e D
+
+select * from Livro
+where NomeLivro like '[aeiou]%';
+
+select * from Livro
+where NomeLivro like '[0-9]%'
+
+
+select * from Livro
+where NomeLivro like 'A%O' --Começa com A e termina com O
+
+
+select * from Livro
+where NomeLivro like '[^F^D]%' -- Não começam com F e D
+
+
+select NomeAutor, SobrenomeAutor
+from Autor
+where NomeAutor like 'R%' and SobrenomeAutor like 'B%';
+
+
+select NomeEditora
+from Editora
+where NomeEditora like '[o-t]%';
+
+
+select NomeAutor, SobrenomeAutor
+from Autor
+where NomeAutor like 'J___';
+
+
+select * from Livro
+where NomeLivro not like '[aeiou0-9]';
+
+
+--Backup e Restauração de Banco de Dados
+
+--Sintaxe
+
+--backup database nome_banco
+--to disk = 'x:\caminho\nome_banco.bak'
+--[with format];
+--go
+
+--Restore database nome_banco
+--from disk = 'x:\caminho\nome_banco.bak'
+--[with replace];
+--go
+
+
+select NomeLivro, NomeAssunto
+from Livro
+inner join Assunto
+on Livro.IdAssunto = Assunto.IdAssunto;
+
+select NomeLivro as Livros, NomeEditora as Editoras
+from Livro
+inner join Editora
+on Livro.IdEditora = Editora.IdEditora
+where Editora.NomeEditora like '[MH]%'
+order by Livro.NomeLivro
+
+select * from Livro
+
+
+
+select L.NomeLivro Livro, A.NomeAutor Autor, A.SobrenomeAutor Sobrenome,
+E.NomeEditora Editora
+from LivroAutor LA
+inner join Autor A
+on LA.IdAutor = A.IdAutor
+inner join Livro L
+on L.IdLivro = LA.IdLivro
+join Editora E
+on L.IdEditora = E.IdEditora
+order by Livro;
+
+--Exercicios
+--Retorne os nomes dos livros e seus respectivos assuntos
+
+SELECT L.NomeLivro Livro, A.NomeAssunto Assunto
+FROM Livro L
+INNER JOIN Assunto A ON L.IdAssunto = A.IdAssunto
+ORDER BY Livro
+
+ -- Retorne Autores, SobrenomeAutor, Livros e Assuntos
+
+SELECT CONCAT(A.NomeAutor, ' ', A.SobrenomeAutor) AS NomeCompleto,
+			  L.NomeLivro, S.NomeAssunto
+			  FROM Autor A
+INNER JOIN LivroAutor LA ON LA.IdAutor = A.IdAutor
+INNER JOIN Livro L ON LA.IdLivro = L.IdLivro
+INNER jOIN Assunto S ON S.IdAssunto = L.IdAssunto
+ORDER BY NomeCompleto
+	   
+--Nome dos Livros, Preços, Editora e Assunto
+
+SELECT 
+	L.NomeLivro Livro, 
+	L.PrecoLivro, 
+	E.NomeEditora, 
+	S.NomeAssunto
+FROM Livro L
+INNER JOIN LivroAutor LA ON LA.IdLivro = L.IdLivro
+INNER JOIN Editora E ON E.IdEditora = L.IdEditora
+INNER JOIN Assunto S ON S.IdAssunto = L.IdAssunto
+ORDER BY Livro ASC;
+
+--Retornar (Livros, Datas, Livros Cujo SobreNome Autor começa com B)
+
+SELECT 
+	L.NomeLivro,
+	L.DataPub,
+	A.SobrenomeAutor
+	
+FROM Livro L
+INNER JOIN LivroAutor LA ON L.IdLivro = LA.IdLivro
+INNER JOIN Autor A ON A.IdAutor = LA.IdAutor
+WHERE A.SobrenomeAutor LIKE 'B%'
+
+--Assunto, SobrenomeAutor, Livros custam mais 80,00
+
+SELECT 
+	 A.SobrenomeAutor,
+	 L.NomeLivro,
+	 L.PrecoLivro
+FROM Autor A
+INNER JOIN LivroAutor LA ON LA.IdAutor = A.IdAutor
+INNER JOIN Livro L ON L.IdLivro = LA.IdLivro
+WHERE L.PrecoLivro > 80.00
+
+--PreçoLivro, Assuntos e NomeLivros BETWEEN 70.00 AND 170.00
+
+SELECT 
+	 L.NomeLivro,
+	 A.NomeAssunto,
+	 L.PrecoLivro
+FROM Livro L
+INNER JOIN Assunto A ON A.IdAssunto = L.IdAssunto
+WHERE L.PrecoLivro BETWEEN 70.00 AND 170.00
+ORDER BY L.PrecoLivro DESC;
+
+
+--OUTER JOIN
+
+select * 
+from Editora E
+Left join Livro L
+ON L.IdEditora = E.IdEditora
+
+
+select * 
+from Livro L
+Left join Editora E
+ON L.IdEditora = E.IdEditora
+
+
+
+select * 
+from Editora E
+left join Livro L
+ON L.IdEditora = E.IdEditora
+
+
+
+select * 
+from Livro L
+full join Editora E 
+ON L.IdEditora = E.IdEditora
+
+
+
+--Exercícios Joins:
+
+--Nível Básico:
+
+--1 Quais os nomes dos livros e seus respectivos autores?
+
+Select 
+	L.NomeLivro,
+	A.NomeAutor,
+	A.SobrenomeAutor
+From 
+	Livro L
+Inner Join 
+	LivroAutor LA On L.IdLivro = LA.IdLivro
+Inner Join
+	Autor A On LA.IdAutor = A.IdAutor
+
+
+-- 2 Quais os nomes dos autores e seus respectivos livros?
+
+Select 
+	A.NomeAutor,
+	A.SobrenomeAutor,
+	L.NomeLivro
+From 
+	Autor A
+Inner Join 
+	LivroAutor LA On A.IdAutor = LA.IdAutor
+Inner Join 
+	Livro L On LA.IdLivro = L.IdLivro
+
+
+-- 3 Quais os nomes dos livros e suas respectivas editoras?
+
+
+Select 
+	L.NomeLivro,
+	E.NomeEditora
+From 
+	Livro L
+Inner Join 
+	Editora E On L.IdEditora = E.IdEditora
+
+
+-- 4 Quais os nomes das editoras e seus respectivos livros?
+
+Select 
+	E.NomeEditora,
+	L.NomeLivro
+From 
+	Editora E
+Inner Join
+	Livro L On E.IdEditora = L.IdEditora
+	
+
+
+-- 5 Quais os nomes dos livros e seus respectivos assuntos?
+
+Select 
+	L.NomeLivro,
+	S.NomeAssunto
+From Livro L
+	Inner Join
+	Assunto S On L.IdAssunto = S.IdAssunto
+
+
+
+-- 6 Quais os nomes dos assuntos e seus respectivos livros?
+
+Select 
+	S.NomeAssunto,
+	L.NomeLivro
+From Assunto S
+	Inner Join 
+	Livro L On S.IdAssunto = L.IdAssunto
+
+
+-- Nível Intermediário:
+
+-- 7 Quais os livros publicados após 2020 e suas respectivas editoras?
+
+Select 
+	L.NomeLivro,
+	L.DataPub,
+	E.NomeEditora
+From 
+	Livro L
+Inner Join 
+	Editora E On L.IdEditora = E.IdEditora
+Where L.DataPub > '2020';
+
+
+-- 8 Quais os autores com sobrenome "Silva" e seus respectivos livros?
+
+Select 
+	A.SobrenomeAutor,
+	L.NomeLivro
+From
+	Autor A
+Inner Join 
+	LivroAutor LA On A.IdAutor = LA.IdAutor
+Inner Join 
+	Livro L On LA.IdLivro = L.IdLivro
+Where
+	A.SobrenomeAutor = 'Verne';
+
+
+
+
+
+
+
+select * from Livro
+cross join Assunto
+
+--Views Exibições
+
+--Simplificar consultas complexas
+--Segurança 
+--Abstração 
+--Agregação e sumarização de dados
+
+/*
+create view NomeView AS
+select colunas
+from tabela
+where condição
+*/
+
+create view vwLivroPreco as
+	select top 5 NomeLivro, PrecoLivro
+	from Livro
+	order by PrecoLivro;
+
+
+	exec sp_helptext vwLivroPreco; -- Mostra o código da View
+
+	if OBJECT_ID('vwLivroAssunto', 'view') is not null
+
+
+--Livros e Autores
+
+Create View vw_LivrosAutores As
+Select
+	L.NomeLivro,
+	A.NomeAutor,
+	A.SobrenomeAutor
+From 
+	Livro L
+Inner Join
+	LivroAutor La On L.IdLivro = La.IdLivro
+Inner Join
+	Autor A On La.IdAutor = A.IdAutor;
+
+
+	Create View vw_LivrosAutores As
+	Select 
+		L.NomeLivro
+		A.NomeAutor
+		A.SobrenomeAutor
+	From 
+		Livro L
+	Inner Join 
+		LivroAutor LA On L.IdLivro = LA.IdLivro
+	Inner Join
+		Autor A On LA.IdAutor = A.IdAutor
+
+
+
+-- Autores e livros
+
+Create View vw_AutoresLivros As
+Select
+	A.NomeAutor,
+	A.SobrenomeAutor,
+	L.NomeLivro
+From 
+	Autor A
+Inner join 
+	LivroAutor La On A.IdAutor = La.IdAutor
+Inner Join
+	Livro L On La.IdLivro = L.IdLivro;
+
+
+
+-- Autores Livros contagem
+
+Create View vw_AutorLivroContagem As
+Select 
+	A.NomeAutor + ' ' + A.SobrenomeAutor As NomeAutorCompleto,
+	Count(L.IdLivro) As NumeroLivros
+From 
+	Autor A
+Left Join
+	LivroAutor LA On A.IdAutor = LA.IdAutor
+Left Join 
+	Livro L On LA.IdLivro = L.IdLivro
+Group By 
+	A.NomeAutor + ' ' + A.SobrenomeAutor;
+
+
+-- Livros e Assuntos Contagem
+Create View LivroAssuntoContagem As
+
+
+Create View vw_AssuntosContagem
+Select 
+	S.NomeAssunto,
+	Count(L.IdLIvro)
+From 
+	Assunto S
+Inner Join 
+	Livro L On S.IdAssunto = L.IdAssunto
+	Group By S.NomeAssunto
+
+
+
+-- Livros com preço acima da Média
+
+Create View vw_precoAcimaDaMedia As
+Select 
+	NomeLivro,
+	PrecoLivro
+From Livro 
+Where 
+	PrecoLivro > (Select Avg(PrecoLivro) From Livro)
+	
+Create View vw_PrecoLivroAcimaDaMedia	
+Select 
+	NomeLivro,
+	PrecoLivro
+From Livro
+Where PrecoLivro > (Select Avg(PrecoLivro) From Livro)
+
+
+
+-- LivrosAutoresEditorasAssuntos
+
+Create View vw_AllTable As
+Select
+	L.NomeLivro,
+	A.NomeAutor,
+	E.NomeEditora,
+	S.NomeAssunto
+From 
+	Livro L
+Inner Join
+	LivroAutor LA On L.IdLivro = LA.IdLivro
+Inner Join 
+	Autor A On LA.IdAutor = A.IdAutor
+Inner Join 
+	Editora E On L.IdEditora = E.IdEditora
+Inner Join 
+	Assunto S On L.IdAssunto = S.IdAssunto
+
+
+
+	CREATE VIEW vw_RankingAutores AS
+SELECT
+    a.NomeAutor + ' ' + a.SobrenomeAutor AS NomeAutorCompleto,
+   RANK() OVER (ORDER BY COUNT(l.IdLivro) DESC) AS PosicaoRanking
+FROM
+    Autor a
+LEFT JOIN
+    LivroAutor la ON a.IdAutor = la.IdAutor
+LEFT JOIN
+    Livro l ON la.IdLivro = l.IdLivro
+GROUP BY
+    a.NomeAutor + ' ' + a.SobrenomeAutor;
+
+
+
+CREATE VIEW vw_LivrosAutoresAssuntos AS
+SELECT 
+    A.NomeAutor,
+    A.SobrenomeAutor,
+    L.NomeLivro,
+    S.NomeAssunto,
+    E.NomeEditora,
+    L.PrecoLivro
+FROM Livro L
+INNER JOIN LivroAutor LA ON L.IdLivro = LA.IdLivro
+INNER JOIN Autor A ON A.IdAutor = LA.IdAutor
+INNER JOIN Assunto S ON S.IdAssunto = L.IdAssunto
+INNER JOIN Editora E ON E.IdEditora = L.IdEditora;
+
+
+
+SELECT * FROM vw_LivrosAutoresAssuntos
+WHERE PrecoLivro > 100
+ORDER BY PrecoLivro DESC;
+
+select 
+	NomeAutor,
+	NomeLivro,
+	PrecoLivro
+	From vw_LivrosAutoresAssuntos;
+
+--SUBCONSULTAS - SUBQUERIES
+
+
+select NomeLivro, IdEditora
+	from Livro
+	where IdEditora = (
+	select IdEditora 
+	from Editora 
+	where NomeEditora = 'Aleph')
+order by NomeLivro
+
+
+select NomeEditora
+From Editora 
+where IdEditora IN (
+	select IdEditora
+	From Livro
+	where IdAssunto IN (1, 3, 7)
+	) order by NomeEditora
+
+
+
+select L.NomeLivro, L.PrecoLivro
+from Livro L,
+     (select avg(PrecoLivro) as MediaPreco from Livro) as subconsulta
+	 where L.precoLivro > subconsulta.MediaPreco;
+
+
+select NomeEditora
+from Editora
+where idEditora IN (
+	select IdEditora 
+	from Livro 
+	where IdAssunto IN (
+		select IdAssunto
+		from Assunto
+		where NomeAssunto = 'Ficção Científica'
+		)
+	)
+order by NomeEditora;
+
+
+-- Procedimentos Armazenados Stored Procedure
+
+Create Procedure BuscaLivro
+		@NomeLivro varchar(20)
+As
+
+
+
+
+
+
+
+create alter procedure sp_teste as
+@Valor
+select 'Edson Rocha' as nome
+
+Exec sp_teste;
+
+create procedure sp_LivroValor as
+
+begin 
+	select NomeLivro Título, PrecoLivro Valor
+	from Livro;
+End
+GO
+Exec 
+Exec sp_LivroValor;
+
+
+CREATE PROCEDURE sp_LivrosAcimaDoPreco
+    @PrecoMinimo DECIMAL(10,2)
+AS
+BEGIN
+    SELECT 
+        L.NomeLivro,
+        E.NomeEditora,
+        L.PrecoLivro
+    FROM Livro L
+    INNER JOIN Editora E ON E.IdEditora = L.IdEditora
+    WHERE L.PrecoLivro >= @PrecoMinimo
+    ORDER BY L.PrecoLivro DESC;
+END;
+
+EXEC sp_LivrosAcimaDoPreco @PrecoMinimo = 80.00;
+
+
+
+Alter procedure sp_LivroValor as 
+	begin
+		select NomeLivro Título, PrecoLivro Valor
+		from Livro
+		where PrecoLivro >= 150.00;
+	end
+go
+
+
+exec sp_helptext sp_LivroValor; -- Mostra o código do procedure
+
+With encryption -- Criptografa o código da procedure
+
+sp_rename 'Nome Atual', 'Nome Novo'; -- Altera o nome da procedure
+
+
+
+alter procedure sp_teste (@p1 as int, @p2 as varchar(20)) as
+select @p1 as 'Parâmetro 01', @p2 as 'Parâmentro 02';
+
+
+Exec sp_teste 55, 'Laranja';
+
+alter procedure sp_LivroValor (
+	@ID smallint, @qtde smallint)
+as 
+begin
+	select NomeLivro Título, @qtde Quantidade,
+		PrecoLivro * @qtde 'Valor Total'
+		from Livro
+		where IdLivro = @ID;
+	end
+go
+
+Exec sp_LivroValor 104, 5;
+
+
+--Triggers Gatilhos
+
+create or alter trigger tg_editora_cadastrada
+on Editora
+after insert
+as 
+begin
+	select concat('Há ', count(*), ' editoras cadastradas') as Cadastros
+	from Editora;
+end
+go
+
+insert into Editora values ('Nova Editora');
+
+create or alter trigger tg_bloqueia_autor
+on Autor
+instead of insert
+as 
+begin
+	PRINT 'Cadastro de autores não permitidos no momento';
+	end
+go
+
+drop trigger tg_bloqueia_autor;
+
+insert into Autor values ('José', 'de Alencar');
+
+--Visualizar os triggers
+
+Exec sp_helptrigger @tabname=Autor;
+
+
+
+
