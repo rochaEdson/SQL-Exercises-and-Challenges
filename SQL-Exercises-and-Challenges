@@ -456,3 +456,3168 @@ order by origem, nome;
 
 
 
+CREATE DATABASE Empresa;
+
+
+CREATE TABLE funcionarios (
+    id_funcionario INT IDENTITY(1,1) PRIMARY KEY,
+    nome_funcionario NVARCHAR(100) NOT NULL,
+    salario DECIMAL(10, 2) NOT NULL,
+    data_contratacao DATE NOT NULL,
+    id_departamento INT,
+    FOREIGN KEY (id_departamento) REFERENCES departamentos(id_departamento) ON DELETE CASCADE
+);
+
+
+INSERT INTO funcionarios (nome_funcionario, salario, data_contratacao, id_departamento)
+VALUES 
+    ('Robert Silva', 5000.00, '2020-10-01', 1),
+    ('Edson Silva', 5000.00, '2020-01-15', 1),
+    ('Maria Souza', 7200.00, '2018-03-22', 2),
+    ('Carlos Mendes', 6000.00, '2019-07-10', 2),
+    ('Ana Paula', 4500.00, '2021-05-01', 3),
+    ('Pedro Almeida', 5500.00, '2017-11-12', 4),
+    ('Juliana Santos', 8000.00, '2016-08-30', 5),
+    ('Fernando Lima', 4800.00, '2022-02-14', 1),
+    ('Camila Oliveira', 6200.00, '2020-09-05', 2),
+    ('Rafael Costa', 5100.00, '2019-12-20', 3),
+    ('Laura Ferreira', 7000.00, '2018-06-18', 5);  
+
+
+insert into funcionarios (nome_funcionario, salario, data_contratacao, id_departamento)
+values
+	('Amanda Costa', 4800, '2025-03-15', 1),
+	('Bruno Almeida', 6200, '2023-11-01', 2),
+	('Carla Mendes', 5300,'2025-01-20', 3),
+	('Diego Rocha', 7100, '2022-07-10', 2),
+	('Eliane Martins',5900,'2024-09-05', 1);
+
+
+	CREATE TABLE departamentos (
+    id_departamento INT IDENTITY(1,1) PRIMARY KEY,
+    nome_departamento NVARCHAR(100) NOT NULL
+);
+
+
+INSERT INTO departamentos (nome_departamento)
+VALUES 
+    ('Manutencao'),
+    ('Recursos Humanos'),
+    ('TI'),
+    ('Financeiro'),
+    ('Marketing'),
+    ('Vendas');
+
+
+
+--Query 1 : Retorne todos os funcionários que trabalham no departamento de "TI".
+
+Select 
+	*
+from 
+	funcionarios f 
+join departamentos d on f.id_departamento = d.id_departamento
+where d.nome_departamento = 'TI';
+
+
+select *
+from 
+	funcionarios
+where 
+	id_departamento = 2;
+
+
+--Query 2 : Liste os funcionários com salário superior a 6000.
+
+select 
+	nome_funcionario
+from 
+	funcionarios
+where 
+	salario > 6000;
+
+--Query 3 : Encontre os funcionários contratados após 01/01/2020.
+
+select
+	nome_funcionario
+from
+	funcionarios
+where 
+	data_contratacao > '01/01/2020';
+
+--Query 4 : Retorne os funcionários cujo nome começa com a letra "A".
+
+select 
+	*
+from
+	funcionarios
+where 
+	nome_funcionario like 'A%';
+
+--Query 5 : Liste os funcionários que ganham entre 5000 e 7000 (inclusive).
+
+select
+	*
+from 
+	funcionarios
+where 
+	salario between 5000 and 7000;
+
+
+--Query 6 : Retorne os funcionários que não pertencem ao departamento de "Vendas".
+
+
+select 
+	*
+from
+	funcionarios
+where
+	id_departamento not like '5';
+	
+
+select 
+	f.nome_funcionario,
+	d.nome_departamento
+from 
+	funcionarios f
+join 
+	departamentos d on f.id_departamento = d.id_departamento
+where 
+	d.nome_departamento != 'Vendas';
+
+
+--Query 7 : Encontre os funcionários cujo nome contém a palavra "Silva".
+
+select
+	* 
+from 
+	funcionarios
+where 
+	nome_funcionario like '%Silva%';
+
+--Query 8 : Liste os funcionários contratados no ano de 2019.
+
+select
+	* 
+from 
+	funcionarios
+where 
+	year(data_contratacao) = 2019;
+
+--Query 9 : Retorne os funcionários que têm salário exatamente igual a 5000.
+
+select 
+	* 
+from 
+	funcionarios
+where 
+	salario = 5000;
+
+--Query 10 : Encontre os funcionários cujo ID do departamento é maior que 2.
+
+select 
+	* 
+from 
+	funcionarios
+where 
+	id_funcionario > 2;
+
+--QUERIES NO WHERE COM IN
+
+--Query 1 : Retorne os funcionários que trabalham nos departamentos com IDs 2 ou 3.
+
+select 
+	* 
+from 
+	funcionarios
+where 
+	id_departamento in (2,3);
+
+--Query 2 : Liste os funcionários cujos nomes são "Edson Silva" ou "Maria Souza".
+
+select 
+	*
+from
+	funcionarios
+where 
+	nome_funcionario in ('Edson Silva','Maria Souza');
+
+--Query 3 : Encontre os funcionários que ganham salários iguais a 5000, 6000 ou 7000.
+
+select 
+	*
+from 
+	funcionarios
+where 
+	salario in (5000, 6000, 7000);
+
+
+--Query 4 : Retorne os funcionários contratados em 2018, 2019 ou 2020.
+
+select 
+	* 
+from 
+	funcionarios
+where 
+	year(data_contratacao) in (2018,2019,2020); 
+
+
+--Query 5 : Liste os funcionários que pertencem aos departamentos "TI" ou "Financeiro".
+
+select 
+	*
+from
+	funcionarios f
+	join departamentos d on f.id_departamento = d.id_departamento
+where 
+	d.nome_departamento in ('TI','Financeiro');
+
+
+--Query 6 : Retorne os funcionários que têm IDs 1, 4 ou 7.
+
+select 
+	* 
+from 
+	funcionarios
+where 
+	id_funcionario in (2,4,7);
+
+
+--Query 7 : Encontre os funcionários cujo nome começa com "J" ou "M".
+
+
+select 
+	* 
+from 
+	funcionarios
+where 
+	left(nome_funcionario,1) in ('J','M', 'E') ;
+
+
+--Query 8 : Liste os funcionários que não trabalham nos departamentos com IDs 1 ou 5.
+
+select 
+	*
+from 
+	funcionarios
+where
+	id_departamento not in (1,5);
+
+
+--Query 9 : Retorne os funcionários que foram contratados nos meses de janeiro, março ou maio.
+
+
+select 
+	*
+from 
+	funcionarios
+where month(data_contratacao) in (1,3,5);
+
+
+--Query 10 : Encontre os funcionários que ganham mais de 5000 e pertencem aos departamentos com IDs 2 ou 4.
+
+select 
+	top 2 nome_funcionario 
+from 
+	funcionarios
+where 
+	salario > 5000 and id_departamento in (2,4);
+
+
+
+-- SUBQUERIES ESCALARES
+
+--Exemplo 1 : Retorne os funcionários que ganham mais que o salário médio.
+
+select *
+from
+	funcionarios
+where 
+	salario > (
+		select 
+			avg(salario)
+			from funcionarios);
+
+--Exemplo 3 : Retorne o departamento com o menor número de funcionários.
+
+select *
+from departamentos
+where id_departamento = (
+	select top 1 id_departamento
+	from funcionarios
+	group by id_departamento
+	order by count(*) asc	
+		);
+
+
+--Exemplo 4 : Encontre o funcionário contratado mais recentemente.
+
+select 
+	*
+from 
+	funcionarios
+where 
+	data_contratacao = (
+		select max(data_contratacao)
+		from funcionarios
+		);
+
+	
+--Exemplo 5 : Retorne os funcionários que têm o mesmo salário que "Edson Silva".
+
+select
+	*
+from 
+	funcionarios
+where 
+	salario = (
+		select salario
+		from funcionarios
+		where nome_funcionario = 'Edson Silva'
+		);
+
+
+--2. Subqueries de Lista
+--Exemplo 1 : Liste os funcionários que pertencem aos departamentos "TI" ou "Vendas".
+
+select *
+from funcionarios
+where id_departamento in (
+	select id_departamento
+	from departamentos
+	where nome_departamento in ('TI','Vendas')
+	);
+
+--Exemplo 2 : Retorne os funcionários que não pertencem aos departamentos com IDs 1, 2 ou 3.
+
+select *
+from funcionarios
+where id_departamento not in (1,2,3);
+
+--Exemplo 3 : Encontre os departamentos que têm funcionários com salários acima de 6000.
+
+select *
+from funcionarios
+where id_departamento in (
+    select id_departamento
+	from funcionarios
+	where salario > 6000
+	);
+
+--Exemplo 4 : Liste os funcionários que trabalham nos departamentos com mais de 3 funcionários.
+
+select *
+from funcionarios
+where id_departamento in (
+	select id_departamento
+	from funcionarios
+	group by id_departamento
+	having count(*) >= 3
+	);
+
+--Exemplo 5 : Retorne os funcionários que têm salários iguais a algum dos salários do departamento "Financeiro".
+
+
+select *
+from funcionarios
+where salario in (
+	select salario
+	from funcionarios
+	where id_departamento = (
+		select id_departamento
+		from departamentos
+		where nome_departamento = 'Financeiro'
+		)
+	);
+
+--3. Subqueries Correlacionadas
+
+--Exemplo 1 : Retorne os funcionários cujo salário é maior que a média do seu próprio departamento.
+
+
+SELECT f.* 
+FROM funcionarios f
+WHERE f.salario > (
+
+    SELECT AVG(f2.salario) 
+    FROM funcionarios f2 
+
+    WHERE f2.id_departamento = f.id_departamento
+);
+
+
+--Exemplo 2 : Liste os funcionários que têm salário maior que pelo menos um funcionário do departamento "TI".
+
+select *
+from funcionarios
+where salario > (
+	select max(salario)
+	from funcionarios
+	where id_departamento in (
+		select id_departamento
+		from departamentos
+		where nome_departamento = 'TI'
+		)
+	);
+
+	SELECT f.* 
+FROM funcionarios f
+WHERE f.salario > ANY (
+    SELECT f2.salario 
+    FROM funcionarios f2 
+    WHERE f2.id_departamento = (SELECT id_departamento FROM departamentos WHERE nome_departamento = 'TI')
+);
+
+--Exemplo 3 : Retorne os funcionários que têm salário menor que todos os funcionários do departamento "Vendas".
+
+select *
+from funcionarios
+where salario < (
+	select min(salario)
+	from funcionarios
+	where id_departamento in (
+		select id_departamento
+		from departamentos
+		where nome_departamento = 'Vendas'
+		)
+	);
+
+
+SELECT f.* 
+FROM funcionarios f
+WHERE f.salario < ALL (
+    SELECT f2.salario 
+    FROM funcionarios f2 
+    WHERE f2.id_departamento = (SELECT id_departamento FROM departamentos WHERE nome_departamento = 'Vendas')
+);
+
+
+
+--Exemplo 4 : Liste os departamentos que têm funcionários com salário superior à média geral.
+
+
+select nome_departamento
+from departamentos d
+where id_departamento in (
+
+	select id_departamento
+	from funcionarios
+	where salario > (
+
+		select avg(salario)
+		from funcionarios f
+		)
+	);
+
+
+--Exemplo 5: Retorne os funcionários que têm salário igual ao de outro funcionário no mesmo departamento.
+
+select f1.*
+from funcionarios f1
+where exists (
+	select 1
+	from funcionarios f2
+	where f1.id_funcionario != f2.id_funcionario
+		and f1.id_departamento = f2.id_departamento
+		and f1.salario = f2.salario
+		);
+
+
+--4. Subqueries com EXISTS
+
+--O operador EXISTS verifica se a subquery retorna pelo menos uma linha.
+
+
+select f.*
+from funcionarios f
+where exists (
+	select 1
+	from projetos_funcionarios pf
+	where pf.id_funcionario = f.id_funcionario
+	);
+
+--Exemplo 2: Liste os departamentos que têm funcionários.
+
+select d.*
+from departamentos d
+where exists (
+	select 1
+	from funcionarios f
+	where f.id_departamento = d.id_departamento
+	);
+
+
+--Exemplo 3: Retorne os funcionários que não têm projetos atribuídos.
+
+select f.*
+from funcionarios f
+where not exists (
+	select 1
+	from projetos_funcionarios pf
+	where pf.id_funcionario = f.id_funcionario
+	);
+
+--Exemplo 4: Liste os departamentos que não têm nenhum funcionário.
+
+select d.*
+from departamentos d
+where not exists (
+	select 1
+	from funcionarios f
+	where d.id_departamento = f.id_departamento
+	);
+
+--Exemplo 5: Retorne os funcionários que têm salário maior que algum funcionário do departamento "TI".
+
+select f.*
+from funcionarios f
+where exists (
+	select 1
+	from funcionarios f2
+	where f2.id_departamento = (
+		select id_departamento
+		from departamentos
+		where nome_departamento = 'TI'
+		) and f.salario > f2.salario
+	);
+
+--listar os funcionários cujo salário é maior que a média do salário do seu próprio departamento
+
+
+select f.*
+from funcionarios f
+where f.salario > (
+	select avg(f2.salario)
+	from funcionarios f2
+	where f.id_departamento = f2.id_departamento
+	);
+
+
+--"Liste os funcionários que têm salário menor que todos os salários do departamento 'Vendas'."
+
+
+select f.*
+from funcionarios f
+where f.salario < All (
+	select f2.salario
+	from funcionarios f2
+	where f2.id_departamento = (
+		select id_departamento 
+		from departamentos 
+		where nome_departamento = 'Vendas'
+		)
+	);
+
+
+select nome_funcionario
+from funcionarios f
+where exists (
+	select 1
+	from departamentos d
+	where f.id_departamento = d.id_departamento
+	);
+
+
+--Fuções no where
+
+-- Função Left()
+
+select * 
+from funcionarios
+where LEFT(nome_funcionario,1)= 'R';
+
+select *
+from funcionarios
+where LEFT(nome_funcionario, 2)= 'Ma'; 
+
+select * 
+from funcionarios
+where LEFT(nome_funcionario, 3)='Eds'
+
+
+--Função Right()
+
+select *
+from funcionarios
+where RIGHT(nome_funcionario, 1) = 'a';
+
+
+select * 
+from funcionarios
+where RIGHT(nome_funcionario, 2) = 'ta';
+
+
+select *
+from funcionarios
+where RIGHT(nome_funcionario, 2) ='Va';
+
+
+--Função Len()
+
+select * 
+from funcionarios
+where LEN(nome_funcionario) = 11;
+
+select *
+from funcionarios
+where LEN(nome_funcionario) > 12;
+
+select *
+from funcionarios
+where LEN(nome_funcionario) < 10;
+
+
+--Função Upper()
+
+select * 
+from funcionarios
+where left(UPPER(nome_funcionario),5) = 'Maria';
+
+select *
+from funcionarios
+where UPPER(nome_funcionario) = 'EDSON SILVA';
+
+select *
+from funcionarios
+where RIGHT(upper(nome_funcionario), 6) = 'Santos';
+
+
+--Função Lower()
+
+SELECT * FROM funcionarios
+WHERE LEFT(LOWER(nome_funcionario), 3) = 'ana';
+
+SELECT * FROM funcionarios
+WHERE LOWER(nome_funcionario) = 'robert silva';
+
+
+SELECT * FROM funcionarios
+WHERE RIGHT(LOWER(nome_funcionario), 5) = 'souza';
+
+
+SELECT nome_funcionario
+FROM funcionarios
+WHERE nome_funcionario COLLATE Latin1_General_CI_AS = 'edson silva';
+
+
+-- Treinando com Order By
+
+--Liste todos os funcionários em ordem alfabética pelo nome.
+
+select *
+from funcionarios
+order by nome_funcionario;
+
+--- Liste os funcionários em ordem decrescente de salário.
+
+select *
+from funcionarios
+order by salario desc;
+
+--Liste os funcionários em ordem crescente pela data de contratação (do mais antigo para o mais recente).
+
+select * 
+from funcionarios
+order by data_contratacao asc;
+
+
+-- Liste os funcionários em ordem decrescente pelo nome.
+
+select * 
+from funcionarios
+order by nome_funcionario desc;
+
+--- Liste os funcionários primeiro por departamento (id_departamento) e depois por nome em ordem alfabética.
+
+select 
+	id_departamento,
+	nome_funcionario
+from 
+	funcionarios
+order by 
+	id_departamento,
+	nome_funcionario;
+
+
+--- Liste os funcionários em ordem crescente pelo comprimento do nome.
+
+select *
+from funcionarios
+order by LEN(nome_funcionario)desc;
+
+
+--- Liste os funcionários em ordem alfabética considerando apenas o último caractere do nome.
+
+select * 
+from funcionarios
+order by RIGHT(nome_funcionario,1) asc;
+
+
+--- Liste os funcionários em ordem alfabética ignorando maiúsculas e minúsculas.
+
+select *
+from funcionarios
+order by UPPER(nome_funcionario);
+
+--- Liste os funcionários em ordem crescente de salário e, em caso de empate, em ordem alfabética pelo nome.
+
+select *
+from funcionarios
+order by salario, nome_funcionario asc;
+
+
+--- Liste os funcionários em ordem decrescente pela data de contratação (do mais recente para o mais antigo).
+
+select * 
+from funcionarios
+order by data_contratacao desc;
+
+
+--Paginação de resultados - Offset/fetch
+
+select nome_funcionario
+from funcionarios
+order by nome_funcionario
+offset 3 rows fetch next 3 rows only;
+
+--Ordenação com expressões
+
+
+--Exemplo 1: Ordenar funcionários pelo salário com aumento de 10%
+
+select 
+	nome_funcionario, 
+	salario,
+	salario * 1.1 as salario_ajustado
+from 
+	funcionarios
+order by 
+	salario * 1.1 desc;
+
+
+/*
+CONCAT() — Junção de textos
+🧠 Teoria:
+- Junta dois ou mais valores em uma única string.
+- Substitui o uso do operador + para textos.
+- Evita problemas com NULL (se algum valor for NULL, ele trata como string vazia).
+
+📘 Sintaxe:
+
+CONCAT(valor1, valor2, valor3, ...)
+
+*/
+
+--Exemplo 1: Mostrar nome completo com salário
+
+SELECT CONCAT(nome_funcionario, ' - R$ ', salario) AS info_funcionario
+FROM funcionarios;
+
+select 
+	CONCAT(nome_funcionario, ' - ', data_contratacao) As Info
+from 
+	funcionarios;
+
+	
+SELECT CONCAT(nome_funcionario, ' foi contratado em ', data_contratacao) AS resumo
+FROM funcionarios;
+
+
+
+/*
+📊 O que são Funções Agregadas?
+Funções agregadas resumem ou calculam valores sobre um conjunto de linhas.
+Elas são usadas com ou sem GROUP BY, dependendo do contexto.
+
+🧠 Teoria:
+- Conta o número de linhas ou valores não nulos.
+- Pode contar * (todas as linhas) ou uma coluna específica.
+🧪 Exemplos:
+*/
+
+--Exemplo 1: Total de funcionários
+
+select count(*) TTfuncionarios
+from funcionarios;
+
+
+--Exemplo 2: Quantos funcionários têm salário acima de R$ 6000
+
+select count(*) as acima_6000
+from funcionarios
+where salario > 6000;
+
+/*
+2️⃣ SUM() — Soma valores
+🧠 Teoria:
+- Soma os valores de uma coluna numérica.
+🧪 Exemplos:
+*/
+
+--Exemplo 1: Soma dos salários de todos os funcionários
+
+select sum(salario) as total_salarios
+from funcionarios;
+
+
+--Exemplo 2: Soma dos salários por departamento
+
+select 
+	id_departamento,
+	sum(salario) PG_departamento
+from 
+	funcionarios
+group by
+	id_departamento;
+
+/*
+3️⃣ AVG() — Média
+🧠 Teoria:
+- Calcula a média dos valores de uma coluna numérica.
+🧪 Exemplos
+*/
+
+--Exemplo 1: Média salarial geral
+
+select avg(salario) Media_PG
+from funcionarios;
+
+select avg(salario) Media_DP
+from funcionarios
+group by id_departamento;
+
+
+/*4️⃣ MIN() — Valor mínimo
+🧠 Teoria:
+- Retorna o menor valor de uma coluna.
+🧪 Exemplos
+*/
+
+--Exemplo 1: Menor salário da empresa
+
+select min(salario) Menor_pg
+from funcionarios;
+
+--Exemplo 2: Menor salário por departamento
+
+select 
+	id_departamento, 
+	min(salario) Menor_pg
+from 
+	funcionarios
+group by 
+	id_departamento;
+
+/*
+5️⃣ MAX() — Valor máximo
+🧠 Teoria:
+- Retorna o maior valor de uma coluna.
+🧪 Exemplos
+*/
+
+--Exemplo 1: Maior salário da empresa
+
+select max(salario) as maior_salario
+from funcionarios;
+
+--Exemplo 2: Maior salário por departamento
+
+select 
+	id_departamento,
+	max(salario) Maior_dp
+from 
+	funcionarios
+group by id_departamento
+order by id_departamento
+
+--1. Contar quantos funcionários existem em cada departamento
+
+select 
+	id_departamento,
+	count(id_funcionario) qtd_func
+from 
+	funcionarios
+group by id_departamento
+
+--2. Contar quantos funcionários foram contratados após 2020
+
+select 
+	nome_funcionario,
+	count(ID_funcionario) qtd_func
+from 
+	funcionarios
+where data_contratacao > '2020-01-01'
+group by nome_funcionario
+
+select count(*) ctd_pos_2020
+from funcionarios
+where data_contratacao > '2020-01-01';
+
+
+--3. Contar quantos nomes têm mais de 12 caracteres
+
+select count(*) qtd_func
+from funcionarios
+where LEN(nome_funcionario) > 12;
+
+--1. Soma dos salários por departamento
+
+select
+	id_departamento,
+	sum(salario) soma_dp
+from 
+	funcionarios
+group by id_departamento;  
+
+--2. Soma dos salários de funcionários contratados antes de 2020
+
+select 
+	sum(salario) Soma_pg
+from 
+	funcionarios
+where year(data_contratacao) < '2020';
+
+
+--3. Soma dos salários dos funcionários cujo nome termina com 'a'
+
+select 
+	sum(salario) soma_pg
+from 
+	funcionarios
+where RIGHT(nome_funcionario,1) = 'A';
+
+
+--📊 AVG() — Média
+
+--1. Média salarial por departamento
+
+select 
+	id_departamento,
+	avg(salario) Media_dp
+from 
+	funcionarios
+group by id_departamento
+
+--2. Média salarial dos funcionários contratados em 2020
+
+select 
+	AVG(salario) Media_2020
+from 
+	funcionarios
+where year(data_contratacao) = '2020';
+
+
+--3. Média salarial dos funcionários com nome maior que 10 caracteres
+
+select 
+	SUM(salario) Media_10
+from 
+	funcionarios
+where LEN(nome_funcionario) > 10;
+
+--🔽 MIN() — Mínim
+
+--1. Menor salário por departamento
+
+select 
+	id_departamento,
+	MIN(salario) Menor_sal
+from 
+	funcionarios
+group by id_departamento
+order by MIN(salario);
+
+--2. Menor salário entre funcionários contratados após 2021
+
+select
+	MIN(salario) Menor_2021
+from
+	funcionarios
+where 
+	year(data_contratacao) > 2021;
+
+--3. Menor salário entre funcionários cujo nome começa com 'C'
+
+select 
+	MIN(salario) Menor_c
+from 
+	funcionarios
+where 
+	LEFT(nome_funcionario, 1) = 'C';
+
+
+--🔼 MAX() — Máximo
+--1. Maior salário por departamento
+
+select 
+	id_departamento,
+	MAX(salario) Maior_dp
+from 
+	funcionarios
+group by 
+	id_departamento
+
+
+--2. Maior salário entre funcionários contratados antes de 2019
+
+select
+	MAX(salario) Maior_2019
+from 
+	funcionarios
+where 
+	YEAR(data_contratacao) < 2019;
+
+--3. Maior salário entre funcionários cujo nome contém 'Silva'
+
+select 
+	MAX(salario) Maior_sal
+from 
+	funcionarios
+where 
+	nome_funcionario like '%Silva%';
+
+
+/*
+⚖️ Diferença entre WHERE e HAVING
+| Cláusula | Quando é usada | Atua sobre | Exemplo típico | 
+| WHERE | Antes do agrupamento | Linhas individuais | WHERE salario > 5000 | 
+| HAVING | Depois do agrupamento | Grupos de linhas | HAVING AVG(salario) > 6000 | 
+
+🧠 Regras principais
+✅ WHERE
+- Filtra antes do GROUP BY.
+- Atua sobre colunas normais.
+- Não pode usar funções agregadas diretamente.
+✅ HAVING
+- Filtra depois do GROUP BY.
+- Atua sobre grupos.
+- Pode usar funções agregadas como SUM(), AVG(), COUNT().  
+*/
+
+
+--🧪 Exemplos práticos
+--🔹 Exemplo com WHERE — Filtrar funcionários com salário acima de 6000
+
+select 
+	nome_funcionario,
+	salario
+from 
+	funcionarios
+where 
+	salario > 6000;
+
+--🔹 Exemplo com HAVING — Filtrar departamentos com média salarial acima de 6000
+
+select 
+	id_departamento,
+	AVG(salario) Media_sal
+from 
+	funcionarios
+group by 
+	id_departamento
+having 
+	AVG(salario) > 6000;
+
+
+
+--🧩 1. Listar os departamentos com mais de 10 funcionários
+
+select 
+	id_departamento, 
+	COUNT(*) as TT_func
+from 
+	funcionarios
+group by 
+	id_departamento
+having COUNT(*) > 2;
+
+
+--🧩 2. Listar os funcionários que ganham mais de R$ 5.000
+
+select 
+	nome_funcionario,
+	salario
+from 
+	funcionarios
+where 
+	salario > 5000;
+
+--🧩 3. Listar os departamentos com média salarial acima de R$ 7.000
+
+select 
+	id_departamento,
+	AVG(salario) Media_dp
+from
+	funcionarios
+group by
+	id_departamento
+having AVG(salario) > 7000;
+
+
+--🧩 4. Listar os departamentos com ID menor que 5
+
+select 
+	distinct id_departamento
+from 
+	funcionarios
+where 
+	id_departamento < 5;
+
+
+
+--🧩 5. Listar os cargos com mais de 3 funcionários que ganham acima de R$ 10.000
+
+select 
+	id_departamento,
+	count(*) Qtd_func
+from 
+	funcionarios
+where 
+	salario > 4000
+group by 
+	id_departamento
+having
+	count(*) > 1; 
+	
+	
+--CASE WHEN
+
+--🧠 O que é CASE WHEN?
+
+--O CASE WHEN é uma estrutura condicional que permite avaliar valores e retornar resultados diferentes com base em regras.
+--📘 Sintaxe básica:
+
+
+CASE 
+    WHEN condição1 THEN resultado1
+    WHEN condição2 THEN resultado2
+    ELSE resultado_padrão
+END
+
+
+--Você pode usar isso em:
+
+-- SELECT → para criar colunas condicionais
+-- ORDER BY → para ordenar com lógica personalizada
+-- GROUP BY → em casos mais avançados
+-- UPDATE → para aplicar regras em alterações
+
+--🔧 Exemplos práticos com sua tabela funcionarios
+
+--✅ 1. Classificar salários em faixas
+
+SELECT 
+    nome_funcionario,
+    salario,
+    CASE 
+        WHEN salario < 5000 THEN 'Baixo'
+        WHEN salario BETWEEN 5000 AND 7000 THEN 'Médio'
+        ELSE 'Alto'
+    END AS faixa_salarial
+FROM funcionarios;
+
+
+--🔍 Aqui você cria uma nova coluna chamada faixa_salarial com base no valor do salário.
+
+--✅ 2. Identificar funcionários contratados antes ou depois de 2020
+
+SELECT 
+    nome_funcionario,
+    data_contratacao,
+    CASE 
+        WHEN data_contratacao < '2020-01-01' THEN 'Antigo'
+        ELSE 'Recente'
+    END AS tipo_contratacao
+FROM funcionarios;
+
+
+--🔍 Isso te ajuda a segmentar os funcionários por tempo de casa.
+
+--✅ 3. Aplicar bônus condicional
+
+SELECT 
+    nome_funcionario,
+    salario,
+    CASE 
+        WHEN salario < 5000 THEN salario * 1.10
+        WHEN salario BETWEEN 5000 AND 7000 THEN salario * 1.05
+        ELSE salario * 1.02
+    END AS salario_com_bonus
+FROM funcionarios;
+
+
+--🔍 Aqui você calcula um salário ajustado com bônus, baseado em faixas.
+
+--🧠 Dica prática:
+--O CASE WHEN funciona como um IF... ELSE dentro do SQL.
+--Ele é ótimo para criar lógica sem precisar alterar os dados da tabela.
+
+
+
+--🎯 Desafios SQL (20 enunciados)
+
+-- Liste os funcionários com uma coluna que classifica o salário como "Baixo", "Médio" ou "Alto".
+
+select 
+	nome_funcionario,
+	case
+		when salario <= 4999 then 'Baixo'
+		when salario between 5000 and 6000 then 'Médio'
+		else 'Alto'	
+		end Classe_sal
+from 
+	funcionarios;
+
+
+-- Liste os funcionários contratados antes de 2020 com uma coluna que diga "Antigo" ou "Recente".
+
+select 
+	nome_funcionario,
+	data_contratacao,
+	case 
+		when data_contratacao < '2020' then 'Antigo'
+		else 'Recente'
+		end Classe_ano
+from funcionarios;
+
+
+-- Liste os funcionários cujo nome termina com a letra "a".
+
+select 
+	nome_funcionario
+from
+	funcionarios
+where 
+	RIGHT(nome_funcionario, 1) = 'a'; 
+
+
+-- Liste os departamentos com mais de 2 funcionários.
+
+select 
+	id_departamento,
+	count(*) cont
+from
+	funcionarios
+group by 
+	id_departamento 
+having count(*) > 2;
+
+
+-- Liste os funcionários com salário acima da média geral da empresa.
+
+select
+	nome_funcionario,
+	salario
+from 
+	funcionarios
+where salario > (
+	select AVG(salario)
+	from funcionarios
+	);
+
+-- Liste os funcionários com nome maior que 12 caracteres.
+
+select 
+	nome_funcionario
+from 
+	funcionarios
+where 
+	LEN(nome_funcionario) > 12;
+
+
+-- Liste os departamentos com média salarial acima de R$ 6.000.
+
+select 
+	id_departamento
+from 
+	funcionarios
+where salario > (
+	select avg(salario)
+	from funcionarios
+	having AVG(salario) > 6000
+	);
+
+
+-- Liste os funcionários com uma coluna que diga "TI", "RH", "Outros" com base no id_departamento.
+
+select 
+	nome_funcionario,
+	case
+		when id_departamento = 1 then 'RH'
+		when id_departamento = 2 then 'TI'
+		else 'Outros'
+	end Departamentos
+from 
+	funcionarios
+
+
+-- Liste os funcionários com salário menor que R$ 5.000 e que foram contratados após 2020.
+
+select 
+	nome_funcionario
+from 
+	funcionarios
+where 
+	salario < 5000 and
+	YEAR(data_contratacao) > 2020;
+
+
+-- Liste os departamentos com soma de salários superior a R$ 15.000.
+
+select 
+	id_departamento
+from 
+	funcionarios
+group by 
+	id_departamento
+having	
+	SUM(salario) > 15000;
+
+
+-- Liste os funcionários com uma coluna que diga "Elegível para bônus" se o salário for menor que R$ 6.000.
+
+SELECT
+	nome_funcionario,
+	CASE 
+		WHEN salario < 6000 THEN 'Elegível para bônus'
+	END as Bônus
+FROM 
+	funcionarios;
+
+-- Liste os funcionários com nome que começa com "C" ou "J".
+
+SELECT
+	nome_funcionario
+FROM
+	funcionarios
+WHERE 
+	LEFT(nome_funcionario, 1) = 'C' or
+	LEFT(nome_funcionario, 1) = 'J';
+
+
+-- Liste os departamentos com menos de 3 funcionários que ganham acima de R$ 5.000.
+
+select
+	id_departamento,
+	COUNT(*) contagem
+from 
+	funcionarios
+WHERE 
+	salario > 5000
+group by 
+	id_departamento
+having 
+	COUNT(*) < 3;
+
+	
+-- Liste os funcionários com uma coluna que diga "Longo nome" ou "Nome curto" com base no número de caracteres.
+
+select
+	nome_funcionario,
+	case
+		when len(nome_funcionario) < 13 then 'Nome curto'
+		else 'Longo nome'
+	end as Class_nome
+from 
+	funcionarios;
+
+-- Liste os funcionários com salário entre R$ 4.000 e R$ 6.000.
+
+select 
+	nome_funcionario,
+	salario
+from
+	funcionarios
+where 
+	salario between 4000 and 6000;
+
+-- Liste os departamentos com maior média salarial.
+
+
+		
+-- Liste os funcionários com uma coluna que diga "Recente" se foram contratados após 2021, senão "Veterano".
+
+select
+	nome_funcionario,
+	case
+		when data_contratacao > '2021' then 'Recente'
+		else 'Veterano'
+	end as Classe_cont
+from 
+	funcionarios;
+
+
+-- Liste os funcionários com uma coluna que diga "Silva" se o nome contiver "Silva", senão "Outro".
+
+select
+	nome_funcionario,
+	case
+		when nome_funcionario like '%Silva%' then 'Silva'
+		else 'Outro'
+	end as Sobrenome_silva
+from 
+	funcionarios;
+
+
+-- Liste os departamentos com mais de 1 funcionário cujo nome termina com "a".
+
+select 
+	id_departamento,
+	COUNT(*) Contagem
+from 
+	funcionarios
+where 
+	 Right(nome_funcionario, 1) = 'A'
+group by 
+	id_departamento
+having 
+	COUNT(*) > 1;
+ 
+-- Liste os funcionários com uma coluna que diga "Alta remuneração" se o salário for maior que R$ 7.000, senão "Normal".
+
+select 
+	nome_funcionario,
+	case
+		when salario > 7000 then 'Alta remuneração'
+		else 'Normal'
+	end as Classe_salarial
+from 
+	funcionarios;
+
+
+/*
+Revisar os fundamentos do CRUD é uma excelente escolha — mesmo quem já domina SQL precisa ter isso afiado, 
+porque são as operações que realmente manipulam os dados.
+
+Vamos revisar cada uma com:
+- ✅ Teoria clara
+- 🧪 Exemplos práticos com a tabela funcionarios
+- ⚠️ Dicas e cuidados comuns
+
+🧱 CRUD — As 4 operações básicas
+
+| Operação | Comando SQL | Função | 
+
+| Create | INSERT INTO | Adiciona novos registros | 
+
+| Read | SELECT | Consulta dados (já dominado por você!) | 
+
+| Update | UPDATE | Altera dados existentes | 
+
+| Delete | DELETE | Remove registros | 
+
+
+
+1️⃣ INSERT INTO — Criar registros
+
+🧠 Teoria:
+Adiciona uma nova linha na tabela.
+📘 Sintaxe:
+INSERT INTO funcionarios (nome_funcionario, salario, data_contratacao, id_departamento)
+VALUES ('Carlos Silva', 5500, '2023-05-10', 2);
+
+
+⚠️ Dicas:
+- Sempre respeite os tipos de dados (texto, número, data).
+- Se a tabela tiver uma coluna ID com IDENTITY, não precisa inserir manualmente.
+
+2️⃣ UPDATE — Atualizar registros
+
+🧠 Teoria:
+Modifica os dados de uma ou mais colunas de registros existentes.
+
+📘 Sintaxe:
+UPDATE funcionarios
+SET salario = 6000
+WHERE nome_funcionario = 'Carlos Silva';
+
+
+⚠️ Dicas:
+- Nunca esqueça o WHERE, ou você vai atualizar todos os registros da tabela.
+- Pode atualizar múltiplas colunas:
+SET salario = 6000, id_departamento = 3
+
+
+
+3️⃣ DELETE — Excluir registros
+
+🧠 Teoria:
+Remove registros da tabela.
+
+📘 Sintaxe:
+DELETE FROM funcionarios
+WHERE nome_funcionario = 'Carlos Silva';
+
+
+⚠️ Dicas:
+- Nunca use DELETE sem WHERE, a menos que você queira apagar tudo.
+- Para apagar todos os dados com segurança:
+DELETE FROM funcionarios WHERE 1 = 1;
+
+*/
+
+
+--Treinando com UPDATE 
+
+Update funcionarios
+set
+	nome_funcionario = 'Edson Rocha',
+	salario = 7200,
+	id_departamento = 3
+where id_funcionario = 2;
+
+
+--🛠️ Desafios com UPDATE
+--1️⃣ Atualize o salário de todos os funcionários do departamento 2, aumentando em 10%.
+--Dica: use multiplicação para calcular o novo valor.
+
+Update funcionarios
+set 
+	salario = salario * 1.10
+where id_departamento = 2;
+
+
+--2️⃣ Altere o nome do funcionário cujo salário é exatamente R$ 5900 para "Fernanda Lima".
+--Dica: use WHERE salario = 5900.
+
+Update funcionarios
+set 
+	nome_funcionario = 'Fernanda Lima'
+where salario = 5900;
+
+
+--3️⃣ Transfira todos os funcionários contratados antes de 2023 para o departamento 1.
+--Dica: use WHERE data_contratacao < '2023-01-01'.
+
+Update funcionarios
+set 
+	id_departamento = 1
+where data_contratacao < '2023-01-01';
+
+
+--4️⃣ Aumente o salário em R$ 500 de todos os funcionários cujo nome termina com a letra "a".
+--Dica: use RIGHT(nome_funcionario, 1) = 'a'.
+
+Update funcionarios
+set
+	salario = salario + 500
+where RIGHT(nome_funcionario, 1) = 'a';
+
+
+--5️⃣ Atualize o nome e salário do funcionário com id_funcionario = 5 para "Lucas Prado" e R$ 6800.
+--Dica: atualize múltiplos campos no mesmo SET.
+
+Update funcionarios
+set
+	nome_funcionario = 'Lucas Prado',
+	salario = 6800
+where id_funcionario = 5;
+
+
+
+DELETE FROM funcionarios
+WHERE nome_funcionario = 'Carlos Silva';
+
+
+/*
+🔗 O que são JOINS?
+JOINS servem para combinar dados de duas ou mais tabelas com base em uma relação comum — geralmente uma chave estrangeira.
+
+🧭 Entendendo LEFT, RIGHT e FULL JOIN
+| Tipo de JOIN | O que retorna? | Quando usar? | 
+| LEFT JOIN | Todos os registros da tabela da esquerda, e os correspondentes da direita. | Quando você precisa manter tudo da tabela principal, mesmo sem relação. | 
+| RIGHT JOIN | Todos os registros da tabela da direita, e os correspondentes da esquerda. | Quando a tabela secundária é mais importante no contexto. | 
+| FULL JOIN | Todos os registros de ambas as tabelas, com ou sem correspondência. | Quando você quer ver tudo, inclusive os que não se relacionam. | 
+
+
+
+🎓 Exemplos com cenário real de RH
+
+Imagine duas tabelas:
+- funcionarios
+- departamentos
+
+🟢 LEFT JOIN
+SELECT f.nome_funcionario, d.nome_departamento
+FROM funcionarios f
+LEFT JOIN departamentos d ON f.id_departamento = d.id_departamento;
+
+
+🔍 O que acontece?
+Você verá todos os funcionários, mesmo que alguns não estejam vinculados a nenhum departamento (talvez o campo id_departamento esteja nulo ou inválido).
+📌 Use quando:
+Quer garantir que ninguém fique de fora, mesmo que o dado complementar esteja faltando.
+
+🔵 RIGHT JOIN
+SELECT f.nome_funcionario, d.nome_departamento
+FROM funcionarios f
+RIGHT JOIN departamentos d ON f.id_departamento = d.id_departamento;
+
+
+🔍 O que acontece?
+Você verá todos os departamentos, mesmo que nenhum funcionário esteja alocado neles.
+📌 Use quando:
+Quer saber se há departamentos sem funcionários — útil para auditoria ou planejamento.
+
+🟣 FULL JOIN
+SELECT f.nome_funcionario, d.nome_departamento
+FROM funcionarios f
+FULL JOIN departamentos d ON f.id_departamento = d.id_departamento;
+
+
+🔍 O que acontece?
+Você verá todos os funcionários e todos os departamentos, inclusive os que não têm relação entre si.
+📌 Use quando:
+Quer fazer uma análise completa, inclusive de dados órfãos (sem vínculo).
+
+🧠 Dica para memorizar
+- LEFT = “Quero tudo da tabela principal (à esquerda), mesmo que falte complemento.”
+- RIGHT = “Quero tudo da tabela complementar (à direita), mesmo que falte principal.”
+- FULL = “Quero tudo de tudo, mesmo que não se encaixe.”
+*/
+
+--Treinando JOINS
+--🔍 1. Listar todos os funcionários, mostrando também o nome do departamento em que trabalham.
+--Se o funcionário não estiver alocado em nenhum departamento, ainda assim deve aparecer na lista.
+
+select 
+	f.nome_funcionario,
+	d.nome_departamento
+from 
+	funcionarios f
+left join departamentos d on f.id_departamento = d.id_departamento;
+
+
+--🔍 2. Exibir todos os departamentos, junto com os nomes dos funcionários que estão alocados neles.
+--Se um departamento não tiver nenhum funcionário, ele ainda deve aparecer.
+
+select 
+	d.nome_departamento,
+	f.nome_funcionario
+from 
+	departamentos d 
+left join funcionarios f on d.id_departamento = f.id_departamento;
+
+
+--🔍 3. Mostrar todos os funcionários e todos os projetos em que estão envolvidos.
+--Se houver projetos sem funcionários alocados, ou funcionários sem projetos, ambos devem aparecer.
+
+select 
+	f.nome_funcionario,
+	p.nome_projeto 
+from 
+	funcionarios f 
+full join projetos p on f.id_funcionario = p.id_funcionario;
+--obs: tabela de projetos ficticia
+	
+
+
+--🔍 4. Listar todos os clientes e os pedidos que eles fizeram.
+--Se algum cliente ainda não fez pedido, ele deve aparecer mesmo assim.
+
+select 
+	c.cliente,
+	p.pedido
+from 
+	clientes c
+left join pedidos p on c.id_cliente = p.id_cliente;
+--obs: tabelas ficticias
+
+
+
+--🔍 5. Exibir todos os produtos e os fornecedores que os entregam.
+--Se houver fornecedores cadastrados que ainda não entregaram nenhum produto, eles devem aparecer.
+
+select 
+	p.produto,
+	f.fornecedor
+from	
+	produtos p 
+left join fornecedores f on p.produto_id = f.fornecedor_id
+
+
+--🔍 6. Mostrar todos os funcionários e os treinamentos que participaram.
+--Se houver treinamentos sem nenhum participante, ou funcionários que não participaram de nenhum, todos devem aparecer.
+
+select 
+	f.nome_funcionario,
+	t.treinamento
+from 
+	funcionarios f
+full join treinamento t on f.id_funcionario = t.id_funcionario;
+
+/*
+🧠 O que são Subqueries?
+Subqueries (ou "consultas internas") são consultas aninhadas dentro de outra consulta principal. Elas podem aparecer em:
+
+- SELECT → para calcular valores dinâmicos
+- FROM → para criar tabelas temporárias
+- WHERE → para filtrar com base em resultados de outra consulta
+
+🔍 1. Subquery no SELECT
+📘 Exemplo:
+SELECT 
+    nome_funcionario,
+    salario,
+    (SELECT AVG(salario) FROM funcionarios) AS media_salarial
+FROM funcionarios;
+
+
+🔎 O que faz?
+- Para cada linha, mostra o salário do funcionário e a média salarial da empresa.
+- A subquery calcula a média uma vez, e o valor aparece em todas as linhas.
+📌 Use quando:
+Quer trazer valores agregados ou comparativos junto com os dados principais.
+
+🔍 2. Subquery no FROM
+📘 Exemplo:
+
+SELECT nome_departamento, total_funcionarios
+FROM (
+    SELECT id_departamento, COUNT(*) AS total_funcionarios
+    FROM funcionarios
+    GROUP BY id_departamento
+) AS resumo
+JOIN departamentos ON resumo.id_departamento = departamentos.id_departamento;
+
+
+🔎 O que faz?
+- Cria uma "tabela temporária" chamada resumo com total de funcionários por departamento.
+- Junta essa tabela com departamentos para mostrar os nomes.
+📌 Use quando:
+Quer tratar agrupamentos ou cálculos como se fossem uma tabela.
+
+🔍 3. Subquery no WHERE
+📘 Exemplo:
+
+SELECT nome_funcionario, salario
+FROM funcionarios
+WHERE salario > (
+    SELECT AVG(salario) FROM funcionarios
+);
+
+
+🔎 O que faz?
+- Filtra os funcionários cujo salário é maior que a média da empresa.
+📌 Use quando:
+Quer filtrar dados com base em valores dinâmicos ou existência de registros.
+
+🧠 Dicas práticas
+- Subqueries no SELECT são ótimas para comparações.
+- Subqueries no FROM são ideais para relatórios complexos.
+- Subqueries no WHERE são perfeitas para filtros inteligentes.
+*/
+
+
+--🔍 Subqueries no SELECT (2 exercícios)
+--1️⃣ Liste o nome de cada funcionário e, ao lado, a média salarial da empresa.
+
+select
+	nome_funcionario,
+	(select AVG(salario) from funcionarios) Media_sal
+from 
+	funcionarios;
+
+--2️⃣ Liste o nome de cada departamento e, ao lado, o total de funcionários da empresa.
+
+select 
+	d.nome_departamento,
+	Tab.total_func
+from (
+	select id_departamento, COUNT(*) total_func
+	from funcionarios
+	group by id_departamento
+) as Tab
+join departamentos d on Tab.id_departamento = d.id_departamento
+
+
+--🔍 Subqueries no WHERE (2 exercícios)
+--3️⃣ Liste os funcionários que ganham mais que a média salarial do seu próprio departamento.
+--Dica: você vai precisar de uma subquery que calcule a média por id_departamento.
+
+select 
+	f.nome_funcionario,
+	f.salario
+from 
+	funcionarios f
+where f.salario > (
+	select AVG(f2.salario)
+	from funcionarios f2
+	where f.id_departamento = f2.id_departamento
+	);
+	
+
+--4️⃣ Liste os departamentos que têm pelo menos um funcionário com salário acima de R$ 7000.
+--Dica: use WHERE EXISTS ou IN com subquery.
+
+select 
+	id_departamento,
+	COUNT(*) Qtd
+from 
+	funcionarios
+where exists (
+	select 1
+	from funcionarios
+	where salario > 7000
+	)group by id_departamento;
+
+
+--🔍 Subqueries no FROM (2 exercícios)
+--5️⃣ Liste os nomes dos departamentos e a quantidade de funcionários em cada um, usando uma subquery no FROM.
+--Dica: a subquery deve agrupar por id_departamento e contar os funcionários.
+
+select
+	d.nome_departamento,
+	qtd.total_func
+from (
+	select id_departamento, COUNT(*) total_func
+	from funcionarios
+	group by id_departamento
+	) as qtd
+join departamentos d on qtd.id_departamento = d.id_departamento;
+
+
+--6️⃣ Liste os nomes dos funcionários e o total de salário por departamento, usando subquery no FROM.
+--Dica: a subquery calcula SUM(salario) por departamento, e você junta com funcionarios.
+
+select 
+	f.nome_funcionario,
+	tt.sal
+from (
+	select f2.id_departamento, SUM(f2.salario) sal
+	from funcionarios f2 
+	group by f2.id_departamento
+	) as tt
+join funcionarios f on f.id_departamento = tt.id_departamento
+
+
+
+--🔍 Subqueries no FROM (5 exercícios)
+
+--1️⃣ Total de salário por departamento + nome do departamento
+--Objetivo: Mostrar o nome de cada departamento e o total de salários pagos nele.
+--Dica: Subquery no FROM com SUM(salario) agrupado por id_departamento.
+
+select 
+	d.nome_departamento,
+	tab.ttsal
+from (
+	select id_departamento, SUM(salario) ttsal
+	from funcionarios f
+	group by id_departamento
+	) as tab
+join departamentos d on d.id_departamento = tab.id_departamento
+
+
+
+--2️⃣ Média salarial por departamento + nome dos funcionários
+--Objetivo: Mostrar o nome de cada funcionário e a média salarial do seu departamento.
+--Dica: Subquery no FROM calcula média por id_departamento, depois faz JOIN com funcionarios.
+
+select 
+	f.nome_funcionario,
+	Med.sal
+from (
+	select id_departamento, AVG(salario) sal
+	from funcionarios
+	group by id_departamento
+	) Med
+join funcionarios f on f.id_departamento = Med.id_departamento;
+
+
+
+--3️⃣ Departamentos com mais de 3 funcionários
+--Objetivo: Mostrar nome dos departamentos que têm mais de 3 funcionários.
+--Dica: Subquery no FROM conta funcionários por departamento, depois filtra com WHERE total_func > 3.
+
+
+select 
+	f.id_departamento,
+	tt.func
+from ( 
+	select id_departamento, COUNT(*) func
+	from funcionarios
+	group by id_departamento
+	
+	) tt
+join funcionarios f on f.id_departamento = tt.id_departamento
+where tt.func > 3
+group by tt.func, f.id_departamento;
+
+
+
+--4️⃣ Funcionários com salário acima da média geral
+--Objetivo: Mostrar nome e salário dos funcionários que ganham mais que a média da empresa.
+--Dica: Subquery no FROM calcula AVG(salario) e você cruza com funcionarios.
+
+select
+	f.nome_funcionario,
+	f.salario
+from (
+	select id_departamento, AVG(salario) med
+	from funcionarios
+	group by id_departamento
+	) sal
+join funcionarios f on f.id_departamento = sal.id_departamento
+where f.salario > sal.med;
+
+
+--5️⃣ Funcionários e a soma de salários do departamento deles
+--Objetivo: Mostrar nome do funcionário e a soma de salários do seu departamento.
+--Dica: Subquery no FROM com SUM(salario) por id_departamento, depois JOIN com funcionarios.
+
+select 
+	f.nome_funcionario,
+	soma.sal
+from (
+	select id_departamento, SUM(salario) sal
+	from funcionarios 
+	group by id_departamento
+	) soma
+join funcionarios f on f.id_departamento = soma.id_departamento;
+
+
+--🔍 Subqueries com EXISTS (3 exercícios)
+--1️⃣ Departamentos com pelo menos um funcionário com salário abaixo de R$ 3000
+--Objetivo: Mostrar nome dos departamentos que têm funcionários com salário < 3000.
+--Dica: Use EXISTS com subquery correlacionada que compara id_departamento.
+
+select 
+	id_departamento,
+	salario
+from 
+	funcionarios
+where exists (
+	select 1
+	from funcionarios
+	where salario < 5000
+	group by id_departamento
+	)order by id_departamento;
+
+	SELECT d.nome_departamento
+FROM departamentos d
+WHERE EXISTS (
+    SELECT 1
+    FROM funcionarios f
+    WHERE f.id_departamento = d.id_departamento
+      AND f.salario < 5000
+);
+
+
+--2️⃣ Funcionários que trabalham em departamentos com mais de 5 pessoas
+--Objetivo: Mostrar nome dos funcionários que estão em departamentos com mais de 5 funcionários.
+--Dica: Subquery com COUNT(*) por id_departamento, e EXISTS para verificar se o departamento do funcionário atende à condição.
+
+select
+	id_departamento,
+	nome_funcionario
+from 
+	funcionarios
+where exists (
+	select 1
+	from funcionarios
+	group by id_departamento
+	having COUNT(*) > 5
+	);
+
+
+--3️⃣ Departamentos que não têm nenhum funcionário com salário acima de R$ 10.000
+--Objetivo: Mostrar nome dos departamentos onde ninguém ganha mais que 10 mil.
+--Dica: Use NOT EXISTS com subquery correlacionada.
+
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where not exists (
+	select 1
+	from funcionarios f
+	where d.id_departamento = f.id_departamento
+	and f.salario > 7000
+	);
+
+
+--🧪 Enunciados: Subqueries Correlacionadas
+-- Liste os nomes dos departamentos onde nenhum funcionário ganha mais que 10 mil.
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where not exists (
+	select 1
+	from funcionarios f
+	where d.id_departamento = f.id_departamento
+	and f.salario > 6000
+	);
+
+
+
+select 
+	d.nome_departamento
+from	
+	departamentos d
+where not exists (
+	select 1
+	from funcionarios f
+	where d.id_departamento = f.id_departamento
+	and f.salario > 5000
+	);
+
+-- Liste os nomes dos funcionários que ganham mais que a média salarial do seu próprio departamento.
+
+
+select	
+	f.nome_funcionario
+from 
+	funcionarios f
+where 
+	f.salario > (
+	select AVG(f2.salario)
+	from funcionarios f2
+	where f.id_departamento = f2.id_departamento
+	);
+
+
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where exists (
+	select 1
+	from funcionarios f2
+	where f.id_departamento = f2.id_departamento
+	group by f2.salario
+	having f2.salario > AVG(f2.salario)
+	);
+
+	SELECT f.nome_funcionario
+FROM funcionarios f
+WHERE f.salario > (
+    SELECT AVG(f2.salario)
+    FROM funcionarios f2
+    WHERE f2.id_departamento = f.id_departamento
+);
+
+-- Liste os nomes dos departamentos que possuem pelo menos um funcionário com salário inferior a 3000.
+
+select 
+	d.nome_departamento
+from
+	departamentos d 
+where exists (
+	select 1
+	from funcionarios f
+	where d.id_departamento = f.id_departamento
+	and f.salario < 5000
+	);
+-- Liste os nomes dos funcionários que trabalham em departamentos onde há outro funcionário com salário maior que o deles.
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where exists (
+	select 1 
+	from funcionarios f2
+	where f.id_departamento = f2.id_departamento
+	and f.salario > f2.salario
+	);
+	
+-- Liste os nomes dos departamentos que não possuem funcionários.
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where not exists (
+	select 1
+	from funcionarios f
+	where d.id_departamento = f.id_departamento
+	);
+
+
+--🧪 Enunciados: Subqueries Não Correlacionadas
+-- Liste os nomes dos funcionários que ganham mais que a média salarial geral da empresa.
+
+
+select 
+	f.nome_funcionario,
+	f.salario
+from 
+	funcionarios f
+where 
+	f.salario > (
+	select AVG(f2.salario)
+	from funcionarios f2
+	);
+
+
+
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where salario > (
+	select avg(f2.salario)
+	from funcionarios f2
+	);
+
+-- Liste os nomes dos departamentos cujo nome começa com a mesma letra que o nome do funcionário com maior salário.
+
+
+select 
+	d.nome_departamento
+from
+	departamentos d
+where 
+	LEFT(d.nome_departamento, 1) = (
+	select top 1 LEFT(f.nome_funcionario, 1)
+	from funcionarios f
+	order by f.salario desc
+	);
+
+
+SELECT d.nome_departamento
+FROM departamentos d
+WHERE LEFT(d.nome_departamento, 1) = (
+    SELECT TOP 1 LEFT(f.nome_funcionario, 1)
+    FROM funcionarios f
+    ORDER BY f.salario DESC
+);
+
+-- Liste os nomes dos funcionários cujo salário é igual ao menor salário da empresa.
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where 
+	f.salario = (
+	select MIN(f2.salario)
+	from funcionarios f2
+	);
+
+
+SELECT f.nome_funcionario
+FROM funcionarios f
+WHERE f.salario = (
+    SELECT MIN(f2.salario)
+    FROM funcionarios f2
+);
+
+-- Liste os nomes dos departamentos onde o maior salário da empresa é maior que 20 mil.
+
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where (
+	select MAX(salario)
+	from funcionarios 
+	) > 7500;
+
+
+SELECT d.nome_departamento
+FROM departamentos d
+WHERE (
+    SELECT MAX(salario)
+    FROM funcionarios
+) > 7000;
+
+-- Liste os nomes dos funcionários que ganham menos que o maior salário da empresa.
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where 
+	f.salario < (
+	select max(f2.salario)
+	from funcionarios f2
+	);
+	
+
+SELECT f.nome_funcionario
+FROM funcionarios f
+WHERE f.salario < (
+    SELECT MAX(f2.salario)
+    FROM funcionarios f2
+);
+
+
+--🧪 Enunciados: Subqueries Correlacionadas
+--1. 	Liste os nomes dos departamentos onde nenhum funcionário ganha mais que 10 mil.
+
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where 
+	not exists (
+	select f.nome_funcionario
+	from funcionarios f
+	where d.id_departamento = f.id_departamento
+	and f.salario > 7000
+	);
+
+
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where not exists (
+	select f.id_departamento
+	from funcionarios f
+	where f.id_departamento = d.id_departamento
+	);
+
+--2. 	Liste os nomes dos funcionários que ganham mais que a média salarial do seu próprio departamento.
+
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where 
+	f.salario > (
+		select AVG(f2.salario)
+		from funcionarios f2
+		where f.id_departamento = f2.id_departamento
+		);
+
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where f.salario > (
+	select avg(f2.salario)
+	from funcionarios f2
+	where f.id_departamento = f2.id_departamento
+	);
+
+
+--3. 	Liste os nomes dos departamentos que possuem pelo menos um funcionário com salário inferior a 3000.
+
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where 
+	exists (
+	select 1
+	from funcionarios f
+	where d.id_departamento = f.id_departamento
+	and f.salario < 3000
+	);
+
+
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where exists (
+	select 1
+	from funcionarios f
+	where d.id_departamento = f.id_departamento 
+	and f.salario < 3000
+	);
+
+
+--4. 	Liste os nomes dos funcionários que trabalham em departamentos onde há outro funcionário com salário maior que o deles.
+
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where 
+	exists (
+	select f2.nome_funcionario
+	from funcionarios f2
+	where f.id_departamento = f2.id_departamento
+	and f.salario > f2.salario
+	);
+
+
+
+select 
+	 f.nome_funcionario
+from 
+	funcionarios f
+where 
+	exists (
+	select 1
+	from funcionarios f2
+	where f.id_departamento = f2.id_departamento
+	and f.salario > f2.salario
+	);
+
+
+--5. 	Liste os nomes dos departamentos que não possuem funcionários.
+
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where 
+	not exists (
+	select 1
+	from funcionarios f
+	where d.id_departamento = f.id_departamento
+	);
+
+select 
+	d.nome_departamento
+from
+	departamentos d
+where 
+	not exists (
+		select 1
+		from funcionarios f
+		where d.id_departamento = f.id_departamento
+		);
+
+
+--🧪 Enunciados: Subqueries Não Correlacionadas
+--6. 	Liste os nomes dos funcionários que ganham mais que a média salarial geral da empresa.
+
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where 
+	f.salario > (
+	select AVG(salario)
+	from funcionarios
+	);
+
+
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where f.salario > (
+	select AVG(salario)
+	from funcionarios
+	);
+	
+--7. Liste os nomes dos departamentos cujo nome começa com a mesma letra que o nome do funcionário com maior salário.
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where LEFT(d.nome_departamento, 1) = (
+	select top 1 LEFT(f.nome_funcionario, 1)
+	from funcionarios f
+	order by f.salario desc
+	);
+	
+
+select 
+	d.nome_departamento
+from
+	departamentos d
+where left(d.nome_departamento, 1) = (
+	select top 1 LEFT(f.nome_funcionario, 1) 
+	from funcionarios f
+	order by f.salario desc
+	);
+
+--8. 	Liste os nomes dos funcionários cujo salário é igual ao menor salário da empresa.
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where f.salario = (
+	select MIN(salario)
+	from funcionarios
+	);
+
+
+select 
+	f.nome_funcionario
+from	
+	funcionarios f
+where f.salario = (
+	select MIN(salario)
+	from funcionarios
+	);
+
+--9. Liste os nomes dos departamentos onde o maior salário da empresa é maior que 7 mil.
+
+select 
+	d.nome_departamento
+from 
+	departamentos d
+where (
+	select MAX(f.salario)
+	from funcionarios f
+	) > 7000;
+
+
+SELECT d.nome_departamento
+FROM departamentos d
+WHERE (
+    SELECT MAX(salario)
+    FROM funcionarios
+) > 7000;
+--10. Liste os nomes dos funcionários que ganham menos que o maior salário da empresa.
+
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where 
+	f.salario < (
+	select MAX(salario)
+	from funcionarios
+	);
+
+
+
+select 
+	f.nome_funcionario
+from 
+	funcionarios f
+where f.salario < (
+	select MAX(salario)
+	from funcionarios
+	);
+
+
+--Tipos de dados - Data types
+
+| Tipo                            | Descrição                                        | Observações                      |
+| ------------------------------- | ------------------------------------------------ | -------------------------------- |
+| `INT` / `INTEGER`               | Número inteiro comum                             | Pode ser `SIGNED` ou `UNSIGNED`  |
+| `SMALLINT`                      | Inteiro menor (menos espaço de armazenamento)    | Ideal para valores de 0 a 32.000 |
+| `BIGINT`                        | Inteiro maior (números muito grandes)            | Até 9 quintilhões (64 bits)      |
+| `DECIMAL(p,s)` / `NUMERIC(p,s)` | Números exatos com casas decimais (ex: dinheiro) | `p = precisão`, `s = escala`     |
+| `FLOAT`                         | Número com ponto flutuante (aproximação)         | Mais rápido, menos preciso       |
+| `REAL`                          | Similar ao `FLOAT`, variação por SGBD            | Aproximação, sujeito a erro      |
+| `DOUBLE PRECISION`              | Mais precisão que `FLOAT` e `REAL`               | Usado para cálculos científicos  |
+
+
+| Tipo        | Descrição                                      | Observações                                 |
+| ----------- | ---------------------------------------------- | ------------------------------------------- |
+| `DATE`      | Apenas data (`AAAA-MM-DD`)                     | Ex: `'2025-08-17'`                          |
+| `TIME`      | Apenas hora (`HH:MM:SS`)                       | Ex: `'13:45:00'`                            |
+| `DATETIME`  | Data e hora (sem fuso horário)                 | MySQL usa `DATETIME`                        |
+| `TIMESTAMP` | Data e hora com marca temporal (pode ter fuso) | PostgreSQL usa `TIMESTAMP [WITH] TIME ZONE` |
+| `YEAR`      | Apenas ano (disponível no MySQL)               | Ex: `2025`                                  |
+
+
+
+| Tipo             | Descrição                                    | Observações                                |
+| ---------------- | -------------------------------------------- | ------------------------------------------ |
+| `CHAR(n)`        | Texto fixo com `n` caracteres                | Ocupa sempre o mesmo espaço                |
+| `VARCHAR(n)`     | Texto variável com até `n` caracteres        | Mais eficiente que `CHAR`                  |
+| `TEXT`           | Texto longo (varia por SGBD)                 | Ideal para descrições e textos grandes     |
+| `NVARCHAR(n)`    | Suporte a **Unicode (caracteres especiais)** | SQL Server/PostgreSQL                      |
+| `CLOB` / `NCLOB` | Texto muito longo (Character Large Object)   | Armazenado fora da tabela em alguns bancos |
+
+
+| Tipo      | Descrição                           | Observações                                  |
+| --------- | ----------------------------------- | -------------------------------------------- |
+| `BOOLEAN` | Aceita `TRUE`, `FALSE`, ou `NULL`   | Em MySQL, pode ser tratado como `TINYINT(1)` |
+| `ENUM`    | Conjunto fixo de valores permitidos | MySQL nativamente; simulado em outros bancos |
+| `SET`     | Conjunto de múltiplas escolhas      | Exclusivo do MySQL                           |
+| `UUID`    | Identificador único universal       | Comum em PostgreSQL                          |
+| `JSON`    | Armazena dados em formato JSON      | PostgreSQL, MySQL e SQL Server suportam      |
+| `XML`     | Armazena dados estruturados em XML  | Suportado principalmente no SQL Server       |
+
+
+| Tipo           | Descrição                               |
+| -------------- | --------------------------------------- |
+| `BINARY(n)`    | Cadeia binária fixa                     |
+| `VARBINARY(n)` | Cadeia binária variável                 |
+| `BLOB`         | Binary Large Object — arquivos, imagens |
+
+
+--------------------------------------------------------------------------------------------------
+
+--O Case When é como um "if-else" dentro do SQL. 
+--Ele permite criar condições e retornar valores diferentes dependendo do que acontece.
+
+select 
+	f.nome_funcionario,
+	f.salario,
+	case
+		when f.salario < 6000 then 'Salario baixo'
+		when f.salario between 6001 and 7000 then 'Salario médio'
+		else 'Salario alto'
+	end as faixa_salarial
+from funcionarios f;
+
+
+--Introdução ao CTE (Common Table Expression)
+--O CTE é uma expressão de tabela temporária que você define no início da consulta. Ele ajuda a organizar o código, evitar subqueries repetidas, e facilita a leitura.
+--📌 Estrutura básica:
+
+WITH vendas_por_cliente AS (
+  SELECT cliente_id, SUM(valor) AS total_vendas
+  FROM vendas
+  GROUP BY cliente_id
+)
+SELECT
+  c.nome,
+  v.total_vendas
+FROM clientes c
+JOIN vendas_por_cliente v ON c.id = v.cliente_id;
+
+/*
+🧠 Como pensar no CTE:
+- Imagine que você está criando uma tabela temporária chamada vendas_por_cliente
+- Depois, você pode usá-la como se fosse uma tabela normal na consulta principal
+✅ Vantagens:
+- Organização: separa etapas complexas em blocos
+- Reutilização: evita repetir subqueries
+- Leitura fácil: especialmente útil em análises mais avançadas
+
+🧪 Quer praticar?
+Posso te propor um exercício com CASE WHEN e outro com CTE, ou até combinar os dois em um desafio só.
+Você prefere começar com um exemplo simples ou já quer um cenário mais realista, tipo análise de vendas, desempenho de alunos, ou algo que se relacione com seu dia a dia?
+Você manda! 😎
+*/
+
+
+With vendas_por_cliente as (
+	select cliente_id, sum(valor) as total_vendas
+	from vendas 
+	group by cliente_id
+)
+select 
+	c.nome,
+	v.total_vendas
+from clientes c
+join vendas_por_cliente v on c.id = v.cliente_id;
+
+
+with vendas_por_cliente as (
+	select 
+		cliente_id, 
+		sum(valor) as total_vendas
+	from 
+		vendas
+	group by
+		cliente_id
+	)
+	select 
+		c.nome,
+		v.total_vendas
+	from 
+		clientes c
+	join vendas_por_cliente v on c.id = v.cliente_id;
+
+
+	
+
+-- Exercícios de Case When
+
+--Classifique os funcionários como:
+--Baixo salário se ganham menos do 3000
+--Médio salário se entre 3001 e 7000
+--Alto salário acima de 7001
+
+select 
+f.nome_funcionario,
+f.salario,
+Case
+	When salario < 3000 then 'Baixo'
+	When salario between 3001 and 7000 then 'Médio'
+	Else 'Alto'
+End as Class
+from 
+funcionarios f;
+	
+
+--Crie uma coluna que diga "Sim" se o funcionário estiver alocado em algum departamento, e "Não" se não estiver.
+--Tabela: funcionarios
+--Campo: id_departamento (pode ser nulo)
+
+select 
+	f.nome_funcionario,
+case 
+	when id_departamento between 0 and 1000000 then 'Sim'
+	else 'Não'
+end as Aloc
+from 
+	funcionarios f; 
+
+	
+select f.nome_funcionario,
+case
+	when id_departamento is null then 'Não'
+	else 'Sim'
+end as Alc
+from funcionarios f;
+
+
+--Classifique os departamentos como:
+--• 	"Vazio" se não tiverem funcionários
+--• 	"Ativo" se tiverem pelo menos um funcionário
+
+select 
+	d.nome_departamento,
+case 
+	when f.id_departamento is null then 'Vazio'
+	else 'Ativo'
+end as Class
+from departamentos d 
+full join funcionarios f on d.id_departamento = f.id_departamento;
+
+
+--Crie uma coluna que diga "Acima da média" ou "Abaixo da média" 
+--comparando o salário de cada funcionário com a média geral da empresa.
+
+select
+	f.salario,
+case 
+	when f.salario > (select AVG(salario) from funcionarios) then 'Acima da média'
+	else 'Abaixo da média'
+end as Med 
+from 
+	funcionarios f
+group by 
+	f.salario;
+
+
+ --Crie uma coluna que diga "Mesmo departamento" ou "Outro departamento" comparando o 
+ --departamento de cada funcionário com o do funcionário de maior salário.
+
+ select 
+	f.nome_funcionario,
+case 
+	when f.id_departamento = f2.id_departamento then 'Mesmo departamento'
+	else 'Outro departamento'
+end as depar
+from funcionarios f
+join funcionarios f2 on f.id_departamento = f2.id_departamento
+where f.salario > f2.salario;
+
+
+--🚀 Exercícios de CTE
+--Crie um CTE que calcule o total de salário por departamento, e depois mostre o nome do departamento e esse total.
+
+
+with calc_tt_sal as (
+	select 
+		f.id_departamento,
+		sum(f.salario) tt_salario
+	from 
+		funcionarios f
+	group by 
+		f.id_departamento
+	) select
+		d.nome_departamento,
+		c.tt_salario
+	 from 
+		departamentos d
+	join calc_tt_sal c on d.id_departamento = c.id_departamento;
+		
+	  	
+--Crie um CTE que calcule a média salarial por departamento, 
+--e depois liste os funcionários que ganham acima da média do seu departamento.
+
+with media_dep as (
+	select 
+		f.id_departamento,
+		avg(f.salario) media_sal
+	from 
+		funcionarios f
+	group by f.id_departamento
+	) select 
+		f2.nome_funcionario,
+		m.media_sal
+	  from 
+		funcionarios f2
+	join media_dep m on m.id_departamento = f2.id_departamento
+	where f2.salario > m.media_sal;
+		
+
+
+--Crie um CTE que conte quantos funcionários existem por departamento, 
+--e depois liste apenas os departamentos com mais de 5 funcionários.
+
+
+
+With func_por_dp as (
+	select 
+		f.id_departamento,
+		count(*) qtd_func
+	from 
+		funcionarios f
+	group by 
+		f.id_departamento
+	) select 
+		f2.id_departamento,
+		f3.qtd_func
+	  from 
+		funcionarios f2
+	  join func_por_dp f3 on f2.id_departamento = f3.id_departamento
+	  where f3.qtd_func > 3
+	  group by 
+		f2.id_departamento,
+		f3.qtd_func;
+
+
+
+--Crie um CTE que encontre o menor salário da empresa, e depois liste os funcionários que ganham esse valor.
+
+With menor_salario as (
+	select 
+		f.id_departamento,
+		min(f.salario) as mn_sal
+	from 
+		funcionarios f
+	group by
+		f.id_departamento
+	)select 
+		f2.id_funcionario,
+		f2.salario
+	 from 
+		funcionarios f2
+join menor_salario m on f2.id_departamento = m.id_departamento
+	 and f2.salario = m.mn_sal;
+
+
+--Crie um CTE que calcule a soma de salários por departamento, 
+--e depois classifique os departamentos como "Custos altos" se a soma for maior que R$ 21.000, 
+--ou "Custos baixos" se for menor.
+
+with soma_sal as (
+	select
+		id_departamento,
+		sum(salario) soma
+	from 
+		funcionarios
+	group by 
+		id_departamento
+	) select 
+			d.nome_departamento,
+		   	s.soma,
+		case
+		when s.soma > 21000 then 'Custos altos'
+		else 'Custos baixos'
+	 end as faixa
+	 from 
+		departamentos d
+join soma_sal s on s.id_departamento = d.id_departamento;
+
+
+--Views 
+
+--1 Crie uma view que liste o nome e salário de todos os funcionários.
+
+create view info as 
+	select 
+		nome_funcionario,
+		salario
+	from 
+		funcionarios;
+
+select * from info
+
+
+--2 Crie uma view que mostre os funcionários com salário acima de R$ 5000.
+
+create view vw_sal as 
+	select 
+		nome_funcionario,
+		salario
+	from 
+		funcionarios
+	where 
+		salario > 5000;
+
+select * from vw_sal
+
+--3 Crie uma view que traga o nome do departamento e a quantidade de funcionários em cada um.
+
+create view qtd_dp as 
+	select 
+		d.nome_departamento,
+		count(f.id_funcionario) cont
+	from 
+		departamentos d
+full join funcionarios f on d.id_departamento = f.id_departamento
+group by 
+	d.nome_departamento;
+
+
+select * from qtd_dp
+
+
+
+--4 Crie uma view que traga os funcionários que não estão alocados em nenhum departamento.
+
+create view n_aloc as 
+	select 
+		f.nome_funcionario
+	from 
+		funcionarios f
+	where 
+		f.id_departamento is null;
+
+--5 Crie uma view que traga o nome do funcionário, o nome do departamento e o salário.
+
+create view nds as 
+	select 
+		d.nome_departamento,
+		f.nome_funcionario,
+		f.salario
+	from 
+		funcionarios f
+join departamentos d on f.id_departamento = d.id_departamento;
+
+
+--Procedures sem parâmetros
+--Simples — Listar todos os funcionários
+
+create procedure sp_listar_funcionarios
+as 
+begin 
+	select nome_funcionario, salario
+	from funcionarios;
+end;
+
+create procedure Nomedaprocedure
+as
+begin
+ --query
+end;
+
+
+create procedure nomedaprocedure
+as
+begin
+--Query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as 
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+--query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as 
+begin
+--query
+end;
+
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+
+create procedure nomedaprocedure
+as
+begin
+--query 
+end;
+
+create procedure nomedaprocedure
+as
+begin
+--query
+end;
+
+
+--Listar todos os funcionários
+
+create procedure sp_listar_funcionarios
+as 
+begin
+	select nome_funcionario, salario
+	from funcionarios;
+end;
+
+create procedure sp_listar_funcionarios
+as
+begin
+	select nome_funcionario, salario
+	from funcionarios;
+end;
+
+
+create procedure sp_listar_funcionario
+as
+begin
+	select nome_funcionario, salario
+	from funcionarios;
+end;
+
+
+--Mostrar total de salários por departamento
+
+create procedure sp_total_salario_por_departamento
+as
+begin
+	select
+		d.nome_departamento,
+		sum(f.salario) as total_salario
+	from funcionarios f 
+	join departamentos d on f.id_departamento = d.id_departamento
+	group by d.nome_departamento;
+end;
+
+create procedure sp_total_salario_por_departamento
+as
+begin
+	select 
+		d.nome_departamento,
+		sum(f.salario) as total_salario
+	from funcionarios f
+	join departamentos d on f.id_departamento = d.id_departamento
+	group by d.nome_departamento;
+end;
+
+
+
+
+
+--Mostrar total de salários por departamento
+
+create procedure sp_funcionarios_acima_da_media
+as
+begin
+	with media_por_departamento as (
+		select id_departamento, avg(salario) as media_salario
+		from funcionarios
+		group by id_departamento
+	)
+	select
+		f.nome_funcionario,
+		f.salario,
+		d.nome_departamento,
+		m.media_salario
+	from funcionarios f
+	join media_por_departamento m on f.id_departamento = m.id_departamento
+	join departamentos d on f.id_departamento = d.id_departamento
+	where f.salario > m.media_salario;
+end;
+
+
+
+--Procedures com parâmetros
+
+-- Listar funcionários de um departamento específico
+
+creature procedure sp_funcionarios_por_departamento
+	@id_dep int
+as
+begin
+	select nome_funcionario, salario
+	from funcionarios
+	where id_departamento = @id_dep;
+end;
+
+
+
+--Mostrar total de salários de um departamento específico
+
+create procedure sp_total_salario_departamento
+	@id_dep int
+as 
+begin
+	select sum(salario) as total_salario
+	from funcionarios
+	where id_departamento = @id_dep;
+end;
+
+
+--Listar funcionários com salário acima de um valor mínimo e de um departamento específico
+
+create procedure sp_funcionarios_filtrados
+	@id_dep int,
+	@salario_min decimal(10,2)
+as
+begin
+	select nome_funcionario, salario
+	from funcionarios
+	where id_departamento = @id_dep
+	and salario > @salario_min;
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
