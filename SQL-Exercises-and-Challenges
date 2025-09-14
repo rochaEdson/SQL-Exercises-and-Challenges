@@ -1580,7 +1580,8 @@ having
 	count(*) > 1; 
 	
 	
---CASE WHEN
+--Treino de queries com CASE WHEN
+
 
 --🧠 O que é CASE WHEN?
 
